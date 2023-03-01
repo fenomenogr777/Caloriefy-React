@@ -1,11 +1,8 @@
-import logo from '../images/logo.png';
-
-function Logo() {
+function Logo({ src, alt }) {
   return (
     <div>
-      <img src={logo} alt="page logo" style={{ width: '200px' }} />
+      <img src={src} alt={alt} style={{ width: '200px' }} />
     </div>
   );
 }
-
 export default Logo;

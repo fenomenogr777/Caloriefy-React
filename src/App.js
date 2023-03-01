@@ -1,11 +1,12 @@
-import HeaderPage from './pages/HeaderPage';
+import HeaderSection from './sections/HeaderSection';
+import NutritionDataSection from './sections/NutritionDataSection';
 
 function App() {
   return (
     <div>
-      <HeaderPage />
+      <HeaderSection />
+      <NutritionDataSection />
     </div>
   );
 }
-
 export default App;

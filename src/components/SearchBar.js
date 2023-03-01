@@ -1,33 +1,40 @@
 import { Button, TextField, Grid } from '@mui/material';
-import { useState } from 'react';
-import SearchFoodApi from '../Api';
+import { useState, useContext } from 'react';
+import FoodContext from '../context/food';
 
-export default function SearchBar() {
+function SearchBar() {
   const [value, setValue] = useState('');
+
+  const { getFoodData } = useContext(FoodContext);
 
   const handleChange = e => {
     setValue(e.target.value);
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    SearchFoodApi(value);
+    getFoodData(value);
     setValue('');
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <Grid container gap={1}>
-        <TextField
-          value={value}
-          label="Search Food"
-          onChange={handleChange}
-          size="small"
-        />
-        <Button variant="contained" onClick={handleSubmit} size="medium">
-          submit
-        </Button>
+      <Grid container alignItems="center" gap={0.5}>
+        <Grid item>
+          <TextField
+            label="Search Food"
+            value={value}
+            onChange={handleChange}
+            size="small"
+          />
+        </Grid>
+        <Grid item>
+          <Button type="submit" variant="contained">
+            Search
+          </Button>
+        </Grid>
       </Grid>
     </form>
   );
 }
+export default SearchBar;
