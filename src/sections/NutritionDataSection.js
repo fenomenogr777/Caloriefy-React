@@ -1,18 +1,27 @@
-import Button from '@mui/material/Button';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import FoodContext from '../context/food';
-import TextField from '@mui/material/TextField';
+import { TextField, Button } from '@mui/material';
 
 function NutritionDataSection() {
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState('');
+  const { state, updateOnChange, addFoodSection, totalNutrition } =
+    useContext(FoodContext);
 
-  const { state, updateOnChange, addFoodSection } = useContext(FoodContext);
+  // SET GRAMS TO 100 WHEN CURRENTFOOD CHANGE
+  useEffect(() => {
+    if (state.currentFood?.serving) {
+      setValue(+state.currentFood?.serving);
+    }
+  }, [state.currentFood]);
 
-  const handleClickAddFood = () => {
+  // WHEN USER CLICKS BUTTON "ADD FOOD"
+  const handleClickAddFood = e => {
+    e.preventDefault();
     // GUARD IF NO DATA AND CLICK BUTTON AGAIN
     if (value === '') return;
     addFoodSection();
     console.log(state);
+    totalNutrition();
     setValue('');
   };
 
@@ -22,30 +31,47 @@ function NutritionDataSection() {
   };
 
   return (
-    <div>
-      {state.currentFood && (
-        <div>
-          <div>{state.currentFood.name}</div>
-          <div>{value ?? state.currentFood.serving}</div>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        height: '300px',
+      }}
+    >
+      <div>
+        {state.currentFood && (
           <div>
-            {state.currentUpdFood.calories ?? state.currentFood.calories}
+            <div>{state.currentFood.name}</div>
+            <div>{value || state.currentFood.serving}</div>
+            <div>
+              {state.currentUpdFood.calories ?? state.currentFood.calories}
+            </div>
+            <div>
+              {state.currentUpdFood.protein ?? state.currentFood.protein}
+            </div>
+            <div>{state.currentUpdFood.carb ?? state.currentFood.carb}</div>
+            <div>{state.currentUpdFood.fat ?? state.currentFood.fat}</div>
           </div>
-          <div>{state.currentUpdFood.protein ?? state.currentFood.protein}</div>
-          <div>{state.currentUpdFood.carb ?? state.currentFood.carb}</div>
-          <div>{state.currentUpdFood.fat ?? state.currentFood.fat}</div>
-        </div>
-      )}
-      <TextField
-        style={{ margin: '5px' }}
-        type={'number'}
-        id=""
-        label="Serving Size (gr)"
-        value={value ?? +state.currentFood.serving}
-        onChange={handleChange}
-      />
-      <Button variant="contained" color="error" onClick={handleClickAddFood}>
-        Add Food
-      </Button>
+        )}
+      </div>
+      <form
+        style={{ display: 'flex', alignItems: 'center' }}
+        onSubmit={handleClickAddFood}
+      >
+        <TextField
+          style={{ margin: '5px' }}
+          type={'number'}
+          label="Serving Size (gr)"
+          value={value}
+          onChange={handleChange}
+          size="small"
+        />
+        <Button type="submit" variant="contained" color="primary">
+          Add Food
+        </Button>
+      </form>
     </div>
   );
 }

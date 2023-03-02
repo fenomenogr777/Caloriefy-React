@@ -3,7 +3,7 @@ import { useState, useContext } from 'react';
 import FoodContext from '../context/food';
 
 function SearchBar() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('milk');
 
   const { getFoodData } = useContext(FoodContext);
 
