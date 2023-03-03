@@ -1,7 +1,9 @@
 import { useContext, useState } from 'react';
 import FoodContext from '../context/food';
-import { Button, TextField } from '@mui/material';
+import { Button, IconButton, TextField } from '@mui/material';
 import RandomKEY from '../components/RandomKey';
+import CancelIcon from '@mui/icons-material/Cancel';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 function FoodSection() {
   const [value, setValue] = useState('');
@@ -39,14 +41,14 @@ function FoodSection() {
           <span>{food.protein}</span>
           <span>{food.carb}</span>
           <span>{food.fat}</span>)
-          <Button
+          <IconButton
             onClick={deleteFood}
             variant="contained"
             color="error"
             size="small"
           >
-            delete
-          </Button>
+            <CancelIcon color={'error'} />
+          </IconButton>
         </div>
       );
     });
@@ -75,8 +77,8 @@ function FoodSection() {
       <div>
         {state.TotalNutrition ? (
           <div>
-            C{state.TotalNutrition.calories}// P{state.TotalNutrition.protein}//
-            C{state.TotalNutrition.carb}// F{state.TotalNutrition.fat}//
+            "C"{state.TotalNutrition.calories}"// P"{state.TotalNutrition.protein}"//"
+            "C"{state.TotalNutrition.carb}"// F"{state.TotalNutrition.fat}"//" 
           </div>
         ) : (
           ''
@@ -108,6 +110,7 @@ function FoodSection() {
             required
           />
           <Button type="submit" variant="contained" color="primary">
+            <AddCircleOutlineIcon />
             Add Recipe
           </Button>
         </form>

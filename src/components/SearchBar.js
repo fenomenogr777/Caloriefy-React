@@ -1,6 +1,7 @@
 import { Button, TextField, Grid } from '@mui/material';
 import { useState, useContext } from 'react';
 import FoodContext from '../context/food';
+import SearchIcon from '@mui/icons-material/Search';
 
 function SearchBar() {
   const [value, setValue] = useState('milk');
@@ -30,6 +31,7 @@ function SearchBar() {
         </Grid>
         <Grid item>
           <Button type="submit" variant="contained">
+            <SearchIcon />
             Search
           </Button>
         </Grid>

@@ -1,7 +1,8 @@
 import { useContext } from 'react';
 import FoodContext from '../context/food';
 import RandomKey from '../components/RandomKey';
-import { Button } from '@mui/material';
+import { Button, IconButton } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function RecipeSection() {
   const { state, deleteRecipeById, deleteAllRecipes } = useContext(FoodContext);
@@ -9,7 +10,7 @@ function RecipeSection() {
   if (state.Recipes.length > 0) {
     console.log(111111);
   }
-
+  console.log(state);
   const deleteRecipe = e => {
     const clicked = e.target.closest('.recipeOnRecipeSection').id;
     deleteRecipeById(clicked);
@@ -27,16 +28,17 @@ function RecipeSection() {
           {recipe.ingredient.map(ing => {
             return <div key={RandomKey()}> {ing.name}</div>;
           })}
-          {recipe.totalNutrition.calories}-{recipe.totalNutrition.protein}-
-          {recipe.totalNutrition.carb}-{recipe.totalNutrition.fat}
-          <Button
+          {recipe.TotalNutrition.calories}
+          {recipe.TotalNutrition.protein}
+          {recipe.TotalNutrition.carb}
+          {recipe.TotalNutrition.fat}
+          <IconButton
             onClick={deleteRecipe}
             variant="contained"
-            color="error"
             size="small"
           >
-            delete
-          </Button>
+            <CancelIcon color={'error'} />
+          </IconButton>
         </div>
       );
     });
@@ -45,6 +47,7 @@ function RecipeSection() {
   return (
     <div>
       {renderedRecipes()}
+
       <Button
         onClick={handledeleteAllRecipes}
         variant="contained"

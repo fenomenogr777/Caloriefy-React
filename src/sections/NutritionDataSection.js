@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import FoodContext from '../context/food';
 import { TextField, Button } from '@mui/material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 function NutritionDataSection() {
   const [value, setValue] = useState('');
@@ -69,7 +70,7 @@ function NutritionDataSection() {
           size="small"
         />
         <Button type="submit" variant="contained" color="primary">
-          Add Food
+          <AddCircleOutlineIcon /> Add Food
         </Button>
       </form>
     </div>

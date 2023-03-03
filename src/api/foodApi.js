@@ -1,12 +1,12 @@
 import axios from 'axios';
 import RandomKey from '../components/RandomKey';
 import { FOOD_API_URL } from '../helper/config';
-import { FOOD_API_KEY } from '../helper/config';
+import { NINJA_API_KEY } from '../helper/config';
 
 async function searchFood(query) {
   try {
     // const options = {
-    //   headers: { 'X-Api-Key': FOOD_API_KEY },
+    //   headers: { 'X-Api-Key': NINJA_API_KEY },
     // };
     // const res = await axios.get(`${FOOD_API_URL}${query}`, options);
     // if (res.data.length === 0) {

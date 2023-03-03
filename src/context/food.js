@@ -11,6 +11,8 @@ const DELETE_FOOD_BY_ID = 'delete-food-by-id';
 const DELETE_RECIPE_BY_ID = 'delete-recipe-by-id';
 const DELETE_ALL_RECIPES = 'delete-all-recipes';
 const TOTAL_NUTRITION = 'total-nutrition';
+const ADD_USER_DATA = 'add-user-data';
+const ADD_USER_BMI = 'add-user-bmi';
 
 const FoodContext = createContext();
 
@@ -76,12 +78,19 @@ const reducer = (state, action) => {
     case ADD_RECIPE_SECTION:
       return {
         ...state,
+        TotalNutrition: '',
         Recipes: [
           ...state.Recipes,
           {
             id: RandomKey(),
             ingredient: [...state.TotalFood],
             RecipeName: action.payload,
+            TotalNutrition: {
+              calories: state.TotalNutrition.calories,
+              protein: state.TotalNutrition.protein,
+              carb: state.TotalNutrition.carb,
+              fat: state.TotalNutrition.fat,
+            },
           },
         ],
       };
@@ -95,7 +104,7 @@ const reducer = (state, action) => {
     case DELETE_FOOD_BY_ID:
       return {
         ...state,
-        TotalFood: state.TotalFood.filter(food => {
+        TotalFood: state.TotalFood.filter((food) => {
           return food.id !== action.payload;
         }),
       };
@@ -103,7 +112,7 @@ const reducer = (state, action) => {
     case DELETE_RECIPE_BY_ID:
       return {
         ...state,
-        Recipes: state.Recipes.filter(food => {
+        Recipes: state.Recipes.filter((food) => {
           return food.id !== action.payload;
         }),
       };
@@ -132,6 +141,46 @@ const reducer = (state, action) => {
           }, 0),
         },
       };
+
+    case ADD_USER_DATA:
+      return {
+        ...state,
+        UserData: action.payload,
+      };
+
+    case ADD_USER_BMI:
+      const data = action.payload;
+      return {
+        ...state,
+        UserBMI: {
+          calories:
+            (66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
+            data.activity *
+            data.yourGoal,
+          protein:
+            ((66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
+              data.activity *
+              data.yourGoal *
+              23) /
+            100 /
+            4,
+          carb:
+            ((66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
+              data.activity *
+              data.yourGoal *
+              54) /
+            100 /
+            4,
+          fat:
+            ((66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
+              data.activity *
+              data.yourGoal *
+              23) /
+            100 /
+            9,
+        },
+      };
+
     default:
       return state;
   }
@@ -144,9 +193,11 @@ function FoodProvider({ children }) {
     TotalFood: [],
     TotalNutrition: '',
     Recipes: [],
+    UserData: '',
+    UserBMI: '',
   });
 
-  const getFoodData = async food => {
+  const getFoodData = async (food) => {
     console.log(food);
     const data = await searchFood(food);
 
@@ -158,7 +209,7 @@ function FoodProvider({ children }) {
     });
   };
 
-  const updateOnChange = data => {
+  const updateOnChange = (data) => {
     dispatch({
       type: UPDATE_ONCHANGE_FOOD_DATA,
       payload: data,
@@ -171,7 +222,7 @@ function FoodProvider({ children }) {
     });
   };
 
-  const addRecipeSection = recName => {
+  const addRecipeSection = (recName) => {
     console.log(recName);
     dispatch({
       type: ADD_RECIPE_SECTION,
@@ -185,14 +236,14 @@ function FoodProvider({ children }) {
     });
   };
 
-  const deleteFoodById = id => {
+  const deleteFoodById = (id) => {
     dispatch({
       type: DELETE_FOOD_BY_ID,
       payload: id,
     });
   };
 
-  const deleteRecipeById = id => {
+  const deleteRecipeById = (id) => {
     dispatch({
       type: DELETE_RECIPE_BY_ID,
       payload: id,
@@ -209,6 +260,20 @@ function FoodProvider({ children }) {
     dispatch({ type: TOTAL_NUTRITION });
   };
 
+  const addUserData = (userData) => {
+    dispatch({
+      type: ADD_USER_DATA,
+      payload: userData,
+    });
+  };
+
+  const addUserBMI = (userBMI) => {
+    dispatch({
+      type: ADD_USER_BMI,
+      payload: userBMI,
+    });
+  };
+
   const valueToShare = {
     getFoodData,
     updateOnChange,
@@ -219,6 +284,8 @@ function FoodProvider({ children }) {
     deleteRecipeById,
     deleteAllRecipes,
     totalNutrition,
+    addUserData,
+    addUserBMI,
     state,
   };
 

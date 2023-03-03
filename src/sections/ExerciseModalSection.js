@@ -1,16 +1,19 @@
 import ReactDOM from 'react-dom';
 import { Modal, Typography, Box, IconButton } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import ExerciseModalSection from '../sections/ExerciseModalSection';
+import exerciseApi from '../api/exerciseApi';
+import { useState } from 'react';
 
-function ModalComponent({ isOpen, title, content, closeModal }) {
+function ExerciseModalSection({ isOpen, title, content, closeModal }) {
+  const [open, setOpen] = useState(true);
+
   const handleClose = () => {
     closeModal();
   };
 
   return ReactDOM.createPortal(
     <div>
-      {isOpen && (
+      {true && (
         <Modal open={isOpen} onClose={handleClose}>
           <Box
             sx={{
@@ -25,11 +28,12 @@ function ModalComponent({ isOpen, title, content, closeModal }) {
               borderRadius: '9px',
             }}
           >
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              {title}
+            <Typography id="modal-modal-title" variant="h6" component="h3">
+              Calculate Exercise calories burn
+              <div></div>
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              {content}
+              {content}fggfgfgf
             </Typography>
             <IconButton color="error" variant="contained" onClick={handleClose}>
               <CancelIcon sx={{ position: 'absolute', top: '0' }} />
@@ -41,4 +45,4 @@ function ModalComponent({ isOpen, title, content, closeModal }) {
     document.querySelector('.modal-container')
   );
 }
-export default ModalComponent;
+export default ExerciseModalSection;
