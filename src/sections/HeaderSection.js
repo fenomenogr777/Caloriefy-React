@@ -17,7 +17,7 @@ function HeaderSection() {
   const divEl1 = useRef();
   const divEl2 = useRef();
 
-  const openModal = e => {
+  const openModal = (e) => {
     if (divEl1.current.contains(e.target)) {
       setOpenExercise(!openExercise);
     }
@@ -32,31 +32,39 @@ function HeaderSection() {
   };
 
   return (
+    //
     <Grid
       container
-      direction="row"
+      display={'flex'}
       justifyContent="space-between"
-      alignItems="center"
+      alignItems={'center'}
+      gap="1rem"
     >
-      <Grid item>
+      {/* LOGO (1) */}
+      <Grid item lg={'auto'} md={'auto'} sm={'auto'} xs={12}>
         <Logo src={logoImage} alt="website logo" />
       </Grid>
-      <Grid item>
+
+      {/* SEARCHBAR (2) */}
+      <Grid item lg={'auto'} md={'auto'} sm={'auto'} xs={12} align={'center'}>
         <SearchBar />
       </Grid>
 
-      <Grid item style={{ display: 'flex', gap: '1rem' }}>
+      {/* MODALS  (3) */}
+      <Grid item lg={'auto'} md={'auto'} sm={'auto'} xs={12} align={'center'}>
+        {/* ICON BUTTON (A) */}
         <IconButton ref={divEl1} onClick={openModal}>
           <FitnessCenterIcon />
           <ExerciseModalSection isOpen={openExercise} closeModal={closeModal} />
         </IconButton>
-      </Grid>
-      <Grid item style={{ display: 'flex', gap: '1rem' }}>
+
+        {/* ICON BUTTON (B) */}
         <IconButton ref={divEl2} onClick={openModal}>
           <MenuBookIcon />
           <CaloriesModalSection isOpen={openCalorie} closeModal={closeModal} />
         </IconButton>
       </Grid>
+      {/*  */}
     </Grid>
   );
 }

@@ -3,12 +3,29 @@ import NutritionDataSection from './sections/NutritionDataSection';
 import FoodSection from './sections/FoodSection';
 import RecipeSection from './sections/RecipeSection';
 import UserSection from './sections/UserSection';
-import { Grid, Container, Box } from '@mui/material';
+import { Grid, Container, Box, createTheme } from '@mui/material';
+
+import TestSection from './sections/TestSection';
 
 function App() {
+  const theme = createTheme({
+    breakpoints: {
+      values: {
+        lg: 1200,
+        md: 850,
+        sm: 600,
+        xl: 1500,
+        xs: 0,
+      },
+    },
+  });
+
+  console.log(theme);
+
   return (
     <Container maxWidth="lg">
-      <div
+      <TestSection />
+      <Box
         style={{
           background: '#dad6f6',
           marginTop: '50px',
@@ -16,69 +33,32 @@ function App() {
           borderRadius: '11px',
         }}
       >
+        {/* HEADER SECTION (1) */}
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={12} md={12}>
             <HeaderSection />
           </Grid>
-          {/* NUTRITION SECTION */}
-          <Grid item xs={5}>
-            <Box
-              sx={{
-                width: 'auto',
-                height: 300,
-                padding: '1rem',
-                borderRadius: '11px',
-                backgroundColor: '#fff',
-              }}
-            >
-              <NutritionDataSection />
-            </Box>
-          </Grid>
-          {/* FOOD SECTION */}
-          <Grid item xs={7}>
-            <Box
-              sx={{
-                width: 'auto',
-                height: 300,
-                padding: '1rem',
-                borderRadius: '11px',
-                backgroundColor: '#fff',
-              }}
-            >
-              <FoodSection />
-            </Box>
-          </Grid>
-          {/* RECIPE SECTION */}
-          <Grid item xs={7}>
-            <Box
-              sx={{
-                width: 'auto',
-                height: 300,
-                padding: '1rem',
-                borderRadius: '11px',
-                backgroundColor: '#fff',
-              }}
-            >
-              <RecipeSection />
-            </Box>
+
+          {/* NUTRITION SECTION (2) */}
+          <Grid item xs={12} sm={12} md={5}>
+            <NutritionDataSection />
           </Grid>
 
-          {/* USER SECTION */}
-          <Grid item xs={5}>
-            <Box
-              sx={{
-                width: 'auto',
-                height: 300,
-                padding: '1rem',
-                borderRadius: '11px',
-                backgroundColor: '#fff',
-              }}
-            >
-              <UserSection />
-            </Box>
+          {/* FOOD SECTION (3) */}
+          <Grid item xs={12} sm={12} md={7}>
+            <FoodSection />
+          </Grid>
+          {/* RECIPE SECTION (4) */}
+          <Grid item xs={12} sm={12} md={7}>
+            <RecipeSection />
+          </Grid>
+
+          {/* USER SECTION (5) */}
+          <Grid item xs={12} sm={12} md={5}>
+            <UserSection />
           </Grid>
         </Grid>
-      </div>
+      </Box>
     </Container>
   );
 }

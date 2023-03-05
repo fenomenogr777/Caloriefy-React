@@ -8,33 +8,38 @@ function SearchBar() {
 
   const { getFoodData } = useContext(FoodContext);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setValue(e.target.value);
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     getFoodData(value);
     setValue('');
   };
 
   return (
+    // SUBMIT
     <form onSubmit={handleSubmit}>
-      <Grid container alignItems="center" gap={0.5}>
-        <Grid item>
+      <Grid container>
+        {/* TEXTFIELD (1) */}
+        <Grid item lg={6} md={6} sm={6} xs={12}>
           <TextField
             label="Search Food"
             value={value}
             onChange={handleChange}
             size="small"
+            background="#fff"
           />
         </Grid>
-        <Grid item>
-          <Button type="submit" variant="contained">
-            <SearchIcon />
+
+        {/* BUTTON (2) */}
+        <Grid item lg={6} md={6} sm={6} xs={12}>
+          <Button startIcon={<SearchIcon />} type="submit" variant="contained">
             Search
           </Button>
         </Grid>
+        {/*  */}
       </Grid>
     </form>
   );

@@ -149,35 +149,13 @@ const reducer = (state, action) => {
       };
 
     case ADD_USER_BMI:
-      const data = action.payload;
       return {
         ...state,
         UserBMI: {
-          calories:
-            (66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
-            data.activity *
-            data.yourGoal,
-          protein:
-            ((66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
-              data.activity *
-              data.yourGoal *
-              23) /
-            100 /
-            4,
-          carb:
-            ((66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
-              data.activity *
-              data.yourGoal *
-              54) /
-            100 /
-            4,
-          fat:
-            ((66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
-              data.activity *
-              data.yourGoal *
-              23) /
-            100 /
-            9,
+          calories: action.payload.calories.toFixed(0),
+          protein: action.payload.protein.toFixed(0),
+          carb: action.payload.carb.toFixed(0),
+          fat: action.payload.fat.toFixed(0),
         },
       };
 
@@ -268,6 +246,7 @@ function FoodProvider({ children }) {
   };
 
   const addUserBMI = (userBMI) => {
+    console.log(userBMI);
     dispatch({
       type: ADD_USER_BMI,
       payload: userBMI,

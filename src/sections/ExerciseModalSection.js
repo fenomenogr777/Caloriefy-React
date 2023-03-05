@@ -33,7 +33,7 @@ function ExerciseModalSection({ isOpen, title, content, closeModal }) {
               <div></div>
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              {content}fggfgfgf
+              {content}Υπο κατασκευη καποτεεεε
             </Typography>
             <IconButton color="error" variant="contained" onClick={handleClose}>
               <CancelIcon sx={{ position: 'absolute', top: '0' }} />
