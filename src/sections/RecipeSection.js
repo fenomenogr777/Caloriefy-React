@@ -1,62 +1,124 @@
 import { useContext } from 'react';
 import FoodContext from '../context/food';
 import RandomKey from '../components/RandomKey';
-import { Button, IconButton, Grid, Box } from '@mui/material';
+import {
+  Button,
+  IconButton,
+  Grid,
+  Box,
+  Stack,
+  Typography,
+  Collapse,
+  List,
+  ListItem,
+  Divider,
+} from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
+import { useState } from 'react';
 
 function RecipeSection() {
+  const [open, setOpen] = useState(false);
   const { state, deleteRecipeById, deleteAllRecipes } = useContext(FoodContext);
 
   if (state.Recipes.length > 0) {
     console.log(111111);
   }
   console.log(state);
-  const deleteRecipe = (e) => {
+  const deleteRecipe = e => {
     const clicked = e.target.closest('.recipeOnRecipeSection').id;
     deleteRecipeById(clicked);
   };
 
-  const handledeleteAllRecipes = (e) => {
+  const handledeleteAllRecipes = e => {
     deleteAllRecipes();
   };
 
   const renderedRecipes = () => {
-    return state.Recipes.map((recipe) => {
+    return state.Recipes.map(recipe => {
       return (
-        <div id={recipe.id} className="recipeOnRecipeSection" key={RandomKey()}>
-          <div>{recipe.RecipeName}</div>
-          {recipe.ingredient.map((ing) => {
-            return <div key={RandomKey()}> {ing.name}</div>;
-          })}
-          {recipe.TotalNutrition.calories}
-          {recipe.TotalNutrition.protein}
-          {recipe.TotalNutrition.carb}
-          {recipe.TotalNutrition.fat}
-          <IconButton onClick={deleteRecipe} variant="contained" size="small">
-            <CancelIcon color={'error'} />
-          </IconButton>
-        </div>
+        <Box id={recipe.id} className="recipeOnRecipeSection" key={RandomKey()}>
+
+          <Stack direction="row" alignItems="baseline" gap={1}>
+          <List>
+            <ListItem>
+
+            <Typography variant="h6" component="span">
+              {recipe.RecipeName}
+            </Typography>
+            <Stack direction="row" alignItems="end" gap={1}>
+              <Typography variant="span" component="span">
+                {recipe.TotalNutrition.calories}
+                <Typography variant="subtitle2" component="span">
+                  Calories
+                </Typography>
+              </Typography>
+              <Typography variant="span" component="span">
+                {recipe.TotalNutrition.protein}
+                <Typography variant="subtitle2" component="span">
+                  Protein
+                </Typography>
+              </Typography>
+              <Typography variant="span" component="span">
+                {recipe.TotalNutrition.carb}
+                <Typography variant="subtitle2" component="span">
+                  Carb
+                </Typography>
+              </Typography>
+              <Typography variant="span" component="span">
+                {recipe.TotalNutrition.fat}
+                <Typography variant="subtitle2" component="span">
+                  Fat
+                </Typography>
+              </Typography>
+            </Stack>
+            </ListItem>
+               <Divider />
+            </List>
+
+            {recipe.ingredient.map(ing => {
+              return (
+                <Box>
+                  <Button onClick={() => setOpen(!open)}>Ingredients</Button>
+                  <Collapse in={open}>
+                    <Typography variant="span" key={RandomKey()}>
+                      {ing.name}
+                    </Typography>
+                  </Collapse>
+                </Box>
+              );
+            })}
+
+            <IconButton onClick={deleteRecipe} variant="contained" size="small">
+              <CancelIcon color={'error'} />
+            </IconButton>
+          </Stack>
+        </Box>
       );
     });
   };
 
   return (
-    <Grid
-      container
-      display="flex"
-      flexDirection="column"
+    <Stack
+      direction="column"
       justifyContent="space-between"
-      alignItems="center"
       height={'21rem'}
       backgroundColor="#fff"
-      padding="1rem"
       borderRadius="11px"
     >
-      <Grid item>
-        <Box>{renderedRecipes()}</Box>
-      </Grid>
+      <Box width="100%" overflow="auto">
+        <Typography
+          sx={{ borderTopLeftRadius: '9px', borderTopRightRadius: '9px' }}
+          bgcolor={'#4831d4'}
+          color="#fff"
+          variant="body2"
+          align="center"
+        >
+          Recipes
+        </Typography>
+        <Box padding="0 1rem">{renderedRecipes()}</Box>
+      </Box>
 
-      <Grid item>
+      <Box>
         <Button
           onClick={handledeleteAllRecipes}
           variant="contained"
@@ -65,8 +127,8 @@ function RecipeSection() {
         >
           Delete ALL
         </Button>
-      </Grid>
-    </Grid>
+      </Box>
+    </Stack>
   );
 }
 export default RecipeSection;

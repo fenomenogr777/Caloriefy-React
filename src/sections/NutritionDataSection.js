@@ -13,6 +13,8 @@ import {
   CardContent,
   Typography,
   CardActions,
+  Stack,
+  Divider,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
@@ -29,7 +31,7 @@ function NutritionDataSection() {
   }, [state.currentFood]);
 
   // WHEN USER CLICKS BUTTON "ADD FOOD"
-  const handleClickAddFood = (e) => {
+  const handleClickAddFood = e => {
     e.preventDefault();
     // GUARD IF NO DATA AND CLICK BUTTON AGAIN
     if (value === '') return;
@@ -39,7 +41,7 @@ function NutritionDataSection() {
     setValue('');
   };
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setValue(+e.target.value);
     updateOnChange(+e.target.value);
   };
@@ -53,40 +55,57 @@ function NutritionDataSection() {
       alignItems="center"
       height={'21rem'}
       backgroundColor="#fff"
-      padding="1rem"
       borderRadius="11px"
     >
-      <Grid item>
-        {state.currentFood && (
-          <Card height="320px">
-            <CardHeader
-              title={`${value || state.currentFood.serving} gr of ${
-                state.currentFood.name
-              }`}
-            />
-            <CardContent>
-              <Typography>
-                Calories:
-                {state.currentUpdFood.calories ?? state.currentFood.calories}
-              </Typography>
-              <Typography>
-                Proteins:
-                {state.currentUpdFood.protein ?? state.currentFood.protein}
-              </Typography>
-              <Typography>
-                Carbs:
-                {state.currentUpdFood.carb ?? state.currentFood.carb}
-              </Typography>
-              <Typography>
-                Fat:
-                {state.currentUpdFood.fat ?? state.currentFood.fat}
-              </Typography>
-            </CardContent>
-          </Card>
-        )}
-      </Grid>
+      <Box width={'100%'}>
+        <Typography
+          sx={{ borderTopLeftRadius: '9px', borderTopRightRadius: '9px' }}
+          bgcolor={'#4831d4'}
+          color="#fff"
+          variant="body2"
+          align="center"
+        >
+          Nutrition Data
+        </Typography>
 
-      <Grid item>
+        {state.currentFood && (
+          <Box sx={{ padding: '0 1rem', lineHeight: '2' }}>
+            <List>
+              <ListItem disablePadding>
+                <Typography variant="h6">
+                  {`${state.currentFood.serving} gr of
+                    ${state.currentFood.name}`}
+                </Typography>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="body1">
+                  {state.currentFood.calories}
+                </Typography>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="body1">
+                  {state.currentFood.protein}
+                </Typography>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="body1">
+                  {state.currentFood.carb}
+                </Typography>
+              </ListItem>
+              <Divider />
+              <ListItem>
+                <Typography variant="body1">{state.currentFood.fat}</Typography>
+              </ListItem>
+              <Divider />
+            </List>
+          </Box>
+        )}
+      </Box>
+
+      <Grid item >
         <form style={{}} onSubmit={handleClickAddFood}>
           <TextField
             type={'number'}

@@ -5,8 +5,6 @@ import RecipeSection from './sections/RecipeSection';
 import UserSection from './sections/UserSection';
 import { Grid, Container, Box, createTheme } from '@mui/material';
 
-import TestSection from './sections/TestSection';
-
 function App() {
   const theme = createTheme({
     breakpoints: {
@@ -24,7 +22,6 @@ function App() {
 
   return (
     <Container maxWidth="lg">
-      <TestSection />
       <Box
         style={{
           background: '#dad6f6',
@@ -33,8 +30,8 @@ function App() {
           borderRadius: '11px',
         }}
       >
-        {/* HEADER SECTION (1) */}
         <Grid container spacing={2}>
+          {/* HEADER SECTION (1) */}
           <Grid item xs={12} sm={12} md={12}>
             <HeaderSection />
           </Grid>
