@@ -1,52 +1,34 @@
-import { Button, TextField, Grid } from '@mui/material'
-import { useState, useContext } from 'react'
-import FoodContext from '../context/food'
-import SearchIcon from '@mui/icons-material/Search'
-import { Stack } from '@mui/system'
+import { Box, Button, TextField } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { addIngredient, changeQuery } from '../store'
+import getIngredientData from '../api/foodApi'
 
 function SearchBar() {
-   const [value, setValue] = useState('milk')
-
-   const { getFoodData } = useContext(FoodContext)
+   const dispatch = useDispatch()
+   const { query } = useSelector(({ storeForm }) => storeForm)
 
    const handleChange = e => {
-      setValue(e.target.value)
+      dispatch(changeQuery(e.target.value))
    }
 
+   // Takes query and get data from foodAPi,then store them on "store.storeFood.ingredientData"
    const handleSubmit = async e => {
       e.preventDefault()
-      getFoodData(value)
-      setValue('')
+      const data = await getIngredientData(query)
+      dispatch(addIngredient(data))
+      dispatch(changeQuery(''))
    }
 
    return (
-      // SUBMIT
-      <form onSubmit={handleSubmit}>
-         <Grid container justifyContent="center">
-            <Stack
-               direction='row'
-               alignItems='center'
-               justifyContent='center'>
-               {/* TEXTFIELD (1) */}
-               <TextField
-                  label='Search Food'
-                  value={value}
-                  onChange={handleChange}
-                  size='small'
-                  background='#fff'
-               />
-
-               {/* BUTTON (2) */}
-               <Button
-                  startIcon={<SearchIcon />}
-                  type='submit'
-                  variant='contained'>
-                  Search
-               </Button>
-               {/*  */}
-            </Stack>
-         </Grid>
-      </form>
+      <Box>
+         <form onSubmit={handleSubmit}>
+            <TextField
+               value={query}
+               onChange={handleChange}
+            />
+            <Button type='submit'>Add</Button>
+         </form>
+      </Box>
    )
 }
 export default SearchBar

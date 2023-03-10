@@ -1,213 +1,84 @@
-import { useContext, useState } from 'react'
-import FoodContext from '../context/food'
-import {
-   Button,
-   IconButton,
-   TextField,
-   Grid,
-   Paper,
-   List,
-   ListItem,
-   Divider,
-   Typography,
-   Stack,
-} from '@mui/material'
-import RandomKEY from '../components/RandomKey'
-import CancelIcon from '@mui/icons-material/Cancel'
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
-import FolderSharedIcon from '@mui/icons-material/FolderShared'
-import { Box } from '@mui/system'
+import { Box, Button, TextField, Typography } from '@mui/material'
+import { useDispatch, useSelector } from 'react-redux'
+import { resetMeal, addRecipe, addRecipeTitle } from '../store'
 
 function FoodSection() {
-   const [value, setValue] = useState('')
-   const {
-      state,
-      addRecipeSection,
-      clearTotalFood,
-      deleteFoodById,
-      totalNutrition,
-   } = useContext(FoodContext)
+   const state = useSelector(state => {
+      return state
+   })
+   const dispatch = useDispatch()
+
+   const { meal, recipeTitle } = useSelector(
+      ({ storeFood: { meal, recipeTitle } }) => {
+         return { meal, recipeTitle }
+      }
+   )
+
+   console.log(state)
+   console.log(meal)
+
+   //  RENDER ALL MEALS TOTAL NUTRITIONS
+   const { caloriesTotal, proteinTotal, carbTotal, fatTotal } = meal.reduce(
+      (total, meal) => {
+         total.caloriesTotal += meal.calories
+         total.proteinTotal += meal.protein
+         total.carbTotal += meal.carb
+         total.fatTotal += meal.fat
+         return total
+      },
+      { caloriesTotal: 0, proteinTotal: 0, carbTotal: 0, fatTotal: 0 }
+   )
+
+   //  RENDERS ALL MEALS
+   const renderedMeals = meal.map(meal => {
+      return (
+         <Box key={meal.id}>
+            <Typography>{meal.name}</Typography>
+            <Typography>{meal.serving}</Typography>
+            <Typography>{meal.calories}</Typography>
+            <Typography>{meal.protein}</Typography>
+            <Typography>{meal.carb}</Typography>
+            <Typography>{meal.fat}</Typography>
+         </Box>
+      )
+   })
+
+   const handleCreateRecipe = () => {
+      dispatch(
+         addRecipe({
+            name: recipeTitle,
+            id: meal[0].id,
+            calories: caloriesTotal,
+            protein: proteinTotal,
+            carb: carbTotal,
+            fat: fatTotal,
+            ingredients: meal.map(meal => `${meal.name} ${meal.serving}gr`),
+         })
+      )
+      dispatch(resetMeal())
+      dispatch(addRecipeTitle(''))
+   }
 
    const handleChange = e => {
-      setValue(e.target.value)
-   }
-
-   const deleteFood = e => {
-      const clicked = e.target.closest('.foodOnFoodSection').id
-      deleteFoodById(clicked)
-      totalNutrition()
-   }
-
-   const renderedFoods = () => {
-      const xxx = state.TotalFood.map(food => {
-         return (
-            <ListItem
-               key={RandomKEY()}
-               disablePadding
-               sx={{ paddingLeft: '16px' }}>
-               <Box
-                  className='foodOnFoodSection'
-                  id={food.id}
-                  style={{
-                     display: 'flex',
-                     gap: '0.5rem',
-                     alignItems: 'center',
-                  }}>
-                  <span>
-                     {food.serving} gr of {food.name}
-                  </span>
-                  (<span>{food.calories}</span>
-                  <span>{food.protein}</span>
-                  <span>{food.carb}</span>
-                  <span>{food.fat}</span>)
-                  <IconButton
-                     onClick={deleteFood}
-                     variant='contained'
-                     color='error'
-                     size='small'>
-                     <CancelIcon color={'error'} />
-                  </IconButton>
-               </Box>
-            </ListItem>
-         )
-      })
-      return xxx
-   }
-
-   const handleSubmit = e => {
-      e.preventDefault()
-      // GUARD NOT TO ADD WHEN TOTAL FOOD IS EMPTY
-      if (state.TotalFood.length === 0) return
-      addRecipeSection(value)
-      clearTotalFood()
-      console.log(state)
-      setValue('')
+      dispatch(addRecipeTitle(e.target.value))
    }
 
    return (
-      <Stack
-         direction='column'
-         justifyContent='space-between'
-         height={'21rem'}
-         backgroundColor='#fff'
-         borderRadius='11px'>
-         <Box overflow='auto'>
-            <Box
-               sx={{ borderTopLeftRadius: '9px', borderTopRightRadius: '9px' }}
-               color='#fff'
-               variant='body2'
-               align='center'
-               width='100%'>
-               {/* TITLOS */}
-               <Typography
-                  sx={{
-                     borderTopLeftRadius: '9px',
-                     borderTopRightRadius: '9px',
-                  }}
-                  bgcolor={'#4831d4'}
-                  color='#fff'
-                  variant='body2'
-                  width='100%'
-                  align='center'>
-                  Food Data
-               </Typography>
-            </Box>
+      <Box>
+         <Typography>
+            TOTAL {caloriesTotal}//
+            {proteinTotal}//
+            {carbTotal}//
+            {fatTotal}
+         </Typography>
 
-            <Box width='100%'>
-               {/* TOTAL (1) */}
-
-               <Box>
-                  {state.TotalNutrition ? (
-                     <Stack
-                        direction='row'
-                        gap={1}
-                        justifyContent='space-evenly'>
-                        <List disablePadding>
-                           {/* <Typography variant='h6'>TOTAL</Typography> */}
-
-                           <ListItem
-                              disablePadding
-                              sx={{ display: 'flex', gap: '1rem' }}>
-                              <Typography variant='h6'>
-                                 {state.TotalNutrition.calories}
-                                 <Typography
-                                    variant='overline'
-                                    component='span'>
-                                    &nbsp; Calories
-                                 </Typography>
-                              </Typography>
-                              <Typography variant='h6'>
-                                 {state.TotalNutrition.protein}
-                                 <Typography
-                                    variant='overline'
-                                    component='span'>
-                                    &nbsp; Protein
-                                 </Typography>
-                              </Typography>
-                              <Typography variant='h6'>
-                                 {state.TotalNutrition.carb}
-                                 <Typography
-                                    variant='overline'
-                                    component='span'>
-                                    &nbsp; Carb
-                                 </Typography>
-                              </Typography>
-                              <Typography variant='h6'>
-                                 {state.TotalNutrition.fat}
-                                 <Typography
-                                    variant='overline'
-                                    component='span'>
-                                    &nbsp; Fat
-                                 </Typography>
-                              </Typography>
-                           </ListItem>
-                        </List>
-                     </Stack>
-                  ) : (
-                     ''
-                  )}
-               </Box>
-
-               <Divider color='primary' />
-
-               {/* RENDERED FOODS (2) */}
-               <div>{renderedFoods()}</div>
-            </Box>
-         </Box>
-
-         {/* FORM (3) */}
-
-         {state.TotalNutrition ? (
-            <form onSubmit={handleSubmit}>
-               <Stack
-                  direction='row'
-                  alignItems='center'
-                  justifyContent='flex-end'>
-                  {/* TEXTFIELD(A) */}
-                  <TextField
-                     label='Recipe Name'
-                     value={value}
-                     onChange={handleChange}
-                     size='small'
-                     required
-                  />
-                  {/* BUTTON (B) */}
-                  <Button
-                     style={{ width: '-webkit-fill-available' }}
-                     type='submit'
-                     variant='contained'
-                     color='primary'>
-                     <AddCircleOutlineIcon />
-                     Add Recipe
-                  </Button>
-               </Stack>
-            </form>
-         ) : (
-            ''
-         )}
-
-         {/*  */}
-      </Stack>
+         {renderedMeals}
+         <TextField
+            value={recipeTitle}
+            onChange={handleChange}
+         />
+         <Button onClick={handleCreateRecipe}>Create Recipe</Button>
+      </Box>
    )
 }
 export default FoodSection

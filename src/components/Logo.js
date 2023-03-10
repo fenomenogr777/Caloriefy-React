@@ -1,14 +1,6 @@
-import { Box } from '@mui/material';
-
-function Logo({ src, alt }) {
+function Logo() {
   return (
-    <Box
-    display={"flex"}
-    justifyContent="center"
-    
-    >
-      <img src={src} alt={alt} style={{ width: '190px' }} />
-    </Box>
-  );
+    <div>Logo</div>
+  )
 }
-export default Logo;
+export default Logo
