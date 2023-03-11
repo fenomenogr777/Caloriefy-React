@@ -6,47 +6,46 @@ const foodSlice = createSlice({
       ingredientData: {},
       changedValue: '',
       meal: [],
-      recipeTitle: '',
       recipes: [],
    },
    reducers: {
-      addIngredient(state, action) {
+      addIngredientData(state, action) {
          state.ingredientData = action.payload
-      },
-      resetIngredient(state, action) {
-         state.ingredientData = {}
       },
       addMeal(state, action) {
          state.meal.push(action.payload)
       },
-      addRecipeTitle(state, action) {
-         state.recipeTitle = action.payload
-      },
-      resetMeal(state, action) {
+
+      deleteAllMeal(state, _) {
          state.meal = []
       },
-      changeIngredientValue(state, action) {
-         state.changedValue = action.payload
+      deleteIngredient(state, action) {
+         state.meal = state.meal.filter(meal => {
+            return meal.id !== action.payload
+         })
       },
       addRecipe(state, action) {
          state.recipes.push(action.payload)
       },
-      removeIngredient(state, action) {},
-      removeRecipe(state, action) {},
-      removeAllRecipe(state, action) {},
+      deleteRecipe(state, action) {
+         state.recipes = state.recipes.filter(recipe => {
+            return recipe.id !== action.payload
+         })
+      },
+      deleteAllRecipes(state, _) {
+         state.recipes = []
+      },
    },
 })
 
 export const {
-   addIngredient,
-   changeIngredientValue,
-   removeIngredient,
-   addRecipe,
-   removeRecipe,
-   removeAllRecipes,
+   addIngredientData,
    addMeal,
-   resetMeal,
-   resetIngredient,addRecipeTitle
+   deleteIngredient,
+   addRecipe,
+   deleteRecipe,
+   deleteAllRecipes,
+   deleteAllMeal,
 } = foodSlice.actions
 
 export const foodReducer = foodSlice.reducer

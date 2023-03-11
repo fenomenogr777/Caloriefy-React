@@ -15,13 +15,14 @@ const getIngredientData = async query => {
 
       const data = {
          name: res.data[0].name,
-         calories: res.data[0].calories,
-         protein: res.data[0].protein_g,
-         carb: res.data[0].carbohydrates_total_g,
-         fat: res.data[0].fat_total_g,
+         calories: res.data[0].calories / 100,
+         protein: res.data[0].protein_g / 100,
+         carb: res.data[0].carbohydrates_total_g / 100,
+         fat: res.data[0].fat_total_g / 100,
          serving: res.data[0].serving_size_g,
          id: nanoid(),
       }
+
       return data
    } catch (error) {
       console.error(error)

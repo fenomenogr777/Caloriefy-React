@@ -1,17 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { formReducer, changeQuery } from './slices/formSlice'
+import { formReducer } from './slices/formSlice'
 import {
    foodReducer,
-   addIngredient,
-   changeIngredientValue,
-   removeIngredient,
-   addRecipe,
-   removeRecipe,
-   removeAllRecipes,
+   addIngredientData,
    addMeal,
-   resetMeal,
-   resetIngredient,
-   addRecipeTitle,
+   deleteIngredient,
+   addRecipe,
+   deleteRecipe,
+   deleteAllRecipes,
+   deleteAllMeal,
 } from './slices/foodSlice'
 
 const store = configureStore({
@@ -23,15 +20,11 @@ const store = configureStore({
 
 export {
    store,
-   addIngredient,
-   changeIngredientValue,
-   removeIngredient,
-   addRecipe,
-   removeRecipe,
-   removeAllRecipes,
-   changeQuery,
+   addIngredientData,
    addMeal,
-   resetMeal,
-   resetIngredient,
-   addRecipeTitle,
+   deleteIngredient,
+   addRecipe,
+   deleteRecipe,
+   deleteAllRecipes,
+   deleteAllMeal,
 }

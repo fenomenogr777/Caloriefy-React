@@ -1,70 +1,59 @@
-import { Box, Button, TextField, Typography } from '@mui/material'
-import { useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { changeIngredientValue, addMeal, resetIngredient } from '../store'
+import { Box, Button, TextField } from '@mui/material'
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { addMeal, addIngredientData } from '../store'
+import useIsObject from '../hooks/useIsObject'
 
 function IngredientSection() {
+   const [value, setValue] = useState('')
+
    const dispatch = useDispatch()
 
-   const { ingredientData, changedValue } = useSelector(
-      ({ storeFood: { ingredientData, changedValue } }) => {
-         return {
-            changedValue,
-            ingredientData,
-         }
-      }
-   )
+   const ingredientData = useSelector(({ storeFood: { ingredientData } }) => {
+      if (Object.keys(ingredientData).length === 0) return {}
 
-   // SETS FIRST VALUE FOR THE INPUT THE INGSDATA.SERVING VALUE
-   useEffect(() => {
-      if (ingredientData.serving) {
-         dispatch(changeIngredientValue(ingredientData.serving))
+      ingredientData = {
+         name: ingredientData?.name,
+         id: ingredientData?.id,
+         calories: ingredientData?.calories * value,
+         protein: ingredientData?.protein * value,
+         carb: ingredientData?.carb * value,
+         fat: ingredientData?.fat * value,
+         serving: +value,
+         servingOriginal: ingredientData?.serving,
       }
-   }, [dispatch, ingredientData.serving])
 
-   // MODIFY ORIGINAL INGREDIENT DATA BASES ON USER INPUT VALUE
-   const renderedData = {
-      name: ingredientData.name,
-      id: ingredientData.id,
-      serving: changedValue,
-      calories: Math.round((ingredientData.calories / 100) * changedValue),
-      protein: Math.round((ingredientData.protein / 100) * changedValue),
-      carb: Math.round((ingredientData.carb / 100) * changedValue),
-      fat: Math.round((ingredientData.fat / 100) * changedValue),
+      return ingredientData
+   })
+
+   console.log(ingredientData)
+   const handleChange = e => {
+      setValue(e.target.value)
    }
 
-   const handleValueChange = e => {
-      dispatch(changeIngredientValue(+e.target.value))
-   }
-
-   const handleSubmitIngredient = e => {
+   const handleSubmit = e => {
       e.preventDefault()
-      dispatch(addMeal(renderedData))
-      dispatch(resetIngredient())
-      dispatch(changeIngredientValue(''))
+      dispatch(addMeal(ingredientData))
+      dispatch(addIngredientData({}))
+      setValue('')
    }
 
    return (
       <Box>
-         {/* IF DATA OBJECT IS EMPTY NOT SHOW */}
-         {Object.keys(ingredientData).length !== 0 ? (
+         {useIsObject(
+            ingredientData,
             <Box>
-               <Typography>{renderedData.calories}</Typography>
-               <Typography>{renderedData.protein}</Typography>
-               <Typography>{renderedData.carb}</Typography>
-               <Typography>{renderedData.fat}</Typography>
+               <Box>{ingredientData.calories}</Box>
+               <form onSubmit={handleSubmit}>
+                  <TextField
+                     type='number'
+                     value={value}
+                     onChange={handleChange}
+                  />
+                  <Button type='submit'>Add ingredient</Button>
+               </form>
             </Box>
-         ) : (
-            ''
          )}
-         <form onSubmit={handleSubmitIngredient}>
-            <TextField
-               type='number'
-               value={changedValue}
-               onChange={handleValueChange}
-            />
-            <Button type='submit'>Add Ingredient</Button>
-         </form>
       </Box>
    )
 }

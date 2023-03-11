@@ -1,36 +1,45 @@
 import { Box, Button, TextField, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetMeal, addRecipe, addRecipeTitle } from '../store'
+import { deleteIngredient, addRecipe, addMeal, deleteAllMeal } from '../store'
+import useIsArray from '../hooks/useIsArray'
+import { useState } from 'react'
 
 function FoodSection() {
-   const state = useSelector(state => {
-      return state
-   })
+   const [recipeName, setRecipeName] = useState('')
    const dispatch = useDispatch()
 
-   const { meal, recipeTitle } = useSelector(
-      ({ storeFood: { meal, recipeTitle } }) => {
-         return { meal, recipeTitle }
+   const { meal, total } = useSelector(({ storeFood: { meal } }) => {
+      // IF MEAL EMPTY RETURN EMPTY ARRAYS
+      if (meal.length === 0) return { meal: [], total: [] }
+
+      let storeFood = {
+         meal,
+         total: {
+            calories: meal.reduce((total, meal) => {
+               return total + meal?.calories
+            }, 0),
+            protein: meal.reduce((total, meal) => {
+               return total + meal?.protein
+            }, 0),
+            carb: meal.reduce((total, meal) => {
+               return total + meal?.carb
+            }, 0),
+            fat: meal.reduce((total, meal) => {
+               return total + meal?.fat
+            }, 0),
+         },
       }
-   )
 
-   console.log(state)
-   console.log(meal)
+      return storeFood
+   })
 
-   //  RENDER ALL MEALS TOTAL NUTRITIONS
-   const { caloriesTotal, proteinTotal, carbTotal, fatTotal } = meal.reduce(
-      (total, meal) => {
-         total.caloriesTotal += meal.calories
-         total.proteinTotal += meal.protein
-         total.carbTotal += meal.carb
-         total.fatTotal += meal.fat
-         return total
-      },
-      { caloriesTotal: 0, proteinTotal: 0, carbTotal: 0, fatTotal: 0 }
-   )
+   console.log(meal, total)
 
-   //  RENDERS ALL MEALS
-   const renderedMeals = meal.map(meal => {
+   const handleDeleteIngredient = id => {
+      dispatch(deleteIngredient(id))
+   }
+
+   const renderedMeals = meal?.map(meal => {
       return (
          <Box key={meal.id}>
             <Typography>{meal.name}</Typography>
@@ -39,45 +48,49 @@ function FoodSection() {
             <Typography>{meal.protein}</Typography>
             <Typography>{meal.carb}</Typography>
             <Typography>{meal.fat}</Typography>
+            <Button onClick={() => handleDeleteIngredient(meal.id)}>
+               delete
+            </Button>
          </Box>
       )
    })
 
-   const handleCreateRecipe = () => {
-      dispatch(
-         addRecipe({
-            name: recipeTitle,
-            id: meal[0].id,
-            calories: caloriesTotal,
-            protein: proteinTotal,
-            carb: carbTotal,
-            fat: fatTotal,
-            ingredients: meal.map(meal => `${meal.name} ${meal.serving}gr`),
-         })
-      )
-      dispatch(resetMeal())
-      dispatch(addRecipeTitle(''))
+   const handleChange = e => {
+      setRecipeName(e.target.value)
    }
 
-   const handleChange = e => {
-      dispatch(addRecipeTitle(e.target.value))
+   const handleAddRecipe = e => {
+      e.preventDefault()
+      dispatch(
+         addRecipe({
+            name: recipeName,
+            id: meal[0].id,
+            calories: total.calories,
+            protein: total.protein,
+            carb: total.carb,
+            fat: total.fat,
+            ingredients: meal.map(ing => `${ing.name}-${ing.serving}gr`),
+         })
+      )
+      dispatch(deleteAllMeal())
+      setRecipeName('')
    }
 
    return (
       <Box>
-         <Typography>
-            TOTAL {caloriesTotal}//
-            {proteinTotal}//
-            {carbTotal}//
-            {fatTotal}
-         </Typography>
-
-         {renderedMeals}
-         <TextField
-            value={recipeTitle}
-            onChange={handleChange}
-         />
-         <Button onClick={handleCreateRecipe}>Create Recipe</Button>
+         {useIsArray(meal, <Box> TOTAL = {total?.calories}</Box>)}
+         {useIsArray(meal, renderedMeals)}
+         {useIsArray(
+            meal,
+            <form onSubmit={handleAddRecipe}>
+               <TextField
+                  label='recipe name'
+                  value={recipeName}
+                  onChange={handleChange}
+               />
+               <Button type='submit'>Add Recipe</Button>
+            </form>
+         )}
       </Box>
    )
 }

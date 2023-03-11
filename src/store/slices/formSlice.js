@@ -7,12 +7,10 @@ const formSlice = createSlice({
       userData: [],
    },
    reducers: {
-      changeQuery(state, action) {
-         state.query = action.payload
-      },
+     
    },
 })
 
-export const { changeQuery } = formSlice.actions
+// export const { query } = formSlice.actions
 
 export const formReducer = formSlice.reducer
