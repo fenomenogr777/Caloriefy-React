@@ -1,7 +1,8 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, IconButton, Typography } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import useIsArray from '../hooks/useIsArray'
 import { deleteRecipe, deleteAllRecipes } from '../store'
+import ClearIcon from '@mui/icons-material/Clear'
 
 function RecipeSection() {
    const dispatch = useDispatch()
@@ -27,22 +28,34 @@ function RecipeSection() {
             <Typography>{recipe.calories}</Typography>
             <Typography>{recipe.protein}</Typography>
             <Typography>{recipe.carb}</Typography>
-            <Button
+            <IconButton
                color='error'
                onClick={() => handleDeleteRecipe(recipe.id)}
             >
-               delete
-            </Button>
+               <ClearIcon />
+            </IconButton>
          </Box>
       )
    })
 
    return (
-      <Box>
+      <Box
+         padding='1rem'
+         height='300px'
+         bgcolor='#fff'
+         borderRadius='11px'
+      >
+         hhg
          {useIsArray(recipes, renderedRecipes)}
          {useIsArray(
             recipes,
-            <Button onClick={handleDeleteAllRecipes}>Delete All</Button>
+            <Button
+               variant='contained'
+               color='error'
+               onClick={handleDeleteAllRecipes}
+            >
+               <Typography fontWeight='500'>Delete All</Typography>
+            </Button>
          )}
       </Box>
    )

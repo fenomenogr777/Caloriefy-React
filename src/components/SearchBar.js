@@ -1,8 +1,10 @@
 import { Box, Button, TextField } from '@mui/material'
+import { styled } from '@mui/system'
 import { useDispatch } from 'react-redux'
 import { addIngredientData } from '../store'
 import getIngredientData from '../api/foodApi'
 import { useState } from 'react'
+import SearchIcon from '@mui/icons-material/Search'
 
 function SearchBar() {
    const [value, setValue] = useState('')
@@ -22,12 +24,23 @@ function SearchBar() {
 
    return (
       <Box>
-         <form onSubmit={handleSubmit}>
+         <form
+            onSubmit={handleSubmit}
+            style={{ display: 'flex' }}
+         >
             <TextField
+               label='Search Ingredient'
+               size='small'
                value={value}
                onChange={handleChange}
             />
-            <Button type='submit'>Add</Button>
+            <Button
+               startIcon={<SearchIcon />}
+               variant='contained'
+               type='submit'
+            >
+               Search
+            </Button>
          </form>
       </Box>
    )

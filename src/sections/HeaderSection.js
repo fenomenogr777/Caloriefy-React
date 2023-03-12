@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Stack } from '@mui/material'
 import Logo from '../components/Logo'
 import SearchBar from '../components/SearchBar'
 import CalorieModal from '../components/CalorieModal'
@@ -6,9 +6,11 @@ import CalorieModal from '../components/CalorieModal'
 function HeaderSection() {
    return (
       <Box>
-         <Logo />
-         <SearchBar />
-         <CalorieModal />
+         <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Logo />
+            <SearchBar />
+            <CalorieModal />
+         </Stack>
       </Box>
    )
 }

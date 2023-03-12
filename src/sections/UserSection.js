@@ -1,6 +1,11 @@
+import { Box } from "@mui/material";
+
 function UserSection() {
   return (
-    <div>UserSection</div>
+  <Box  padding='1rem'
+  height='300px'
+  bgcolor='#fff'
+  borderRadius='11px' >fdf</Box>
   )
 }
 export default UserSection
