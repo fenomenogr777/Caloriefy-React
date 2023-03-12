@@ -1,5 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { formReducer } from './slices/formSlice'
+import {
+   formReducer,
+   getUserData,
+   openUserData,
+   deleteUserData,
+} from './slices/formSlice'
 import {
    foodReducer,
    addIngredientData,
@@ -27,4 +32,7 @@ export {
    deleteRecipe,
    deleteAllRecipes,
    deleteAllMeal,
+   getUserData,
+   openUserData,
+   deleteUserData,
 }

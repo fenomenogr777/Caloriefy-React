@@ -1,5 +1,7 @@
-const useIsArray = (arr, valueToDisplay) => {
-   return Array.isArray(arr) && arr.length===0 ? '' : valueToDisplay
+const useIsArray = (arr, displayToFalse, displayToTrue = '') => {
+   return Array.isArray(arr) && arr.length === 0
+      ? displayToTrue
+      : displayToFalse
 }
 
 export default useIsArray

@@ -98,12 +98,12 @@ const foodSlice = createSlice({
             serving: 100,
          },
          {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
+            calories:513,
+            carb: 49,
+            fat:19,
             id: '3nJXKFIAFfPB4329RIsI',
             name: 'milk',
-            protein: 0.035,
+            protein: 35,
             serving: 100,
          },
          {

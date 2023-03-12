@@ -27,7 +27,7 @@ function App() {
                      bgcolor='rgb(218, 214, 246)'
                      borderRadius='11px'
                      boxShadow='0px 10px 20px black'
-                     spacing={4}
+                     spacing={2}
                      container
                   >
                      <Grid

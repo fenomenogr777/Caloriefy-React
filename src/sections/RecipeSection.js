@@ -1,10 +1,34 @@
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import {
+   Box,
+   Button,
+   ButtonGroup,
+   Dialog,
+   IconButton,
+   Menu,
+   MenuItem,
+   Modal,
+   Popover,
+   Popper,
+   Typography,
+} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import useIsArray from '../hooks/useIsArray'
 import { deleteRecipe, deleteAllRecipes } from '../store'
 import ClearIcon from '@mui/icons-material/Clear'
+import LocalDiningIcon from '@mui/icons-material/LocalDining'
+import { useState } from 'react'
+import { Stack } from '@mui/system'
 
 function RecipeSection() {
+   const [open, setOpen] = useState('false')
+
+   const showIngredientsById = id => {
+      setOpen(id)
+      if (id === open) {
+         setOpen('')
+      }
+   }
+
    const dispatch = useDispatch()
    const state = useSelector(state => state)
    console.log(state)
@@ -24,16 +48,36 @@ function RecipeSection() {
    const renderedRecipes = recipes?.map(recipe => {
       return (
          <Box key={recipe.id}>
-            <Typography>{recipe.name}</Typography>
-            <Typography>{recipe.calories}</Typography>
-            <Typography>{recipe.protein}</Typography>
-            <Typography>{recipe.carb}</Typography>
-            <IconButton
-               color='error'
-               onClick={() => handleDeleteRecipe(recipe.id)}
+            <Stack
+               direction='row'
+               alignItems='center'
+               gap={1}
             >
-               <ClearIcon />
-            </IconButton>
+               <Typography>{recipe.name}</Typography>
+               <Typography>{recipe.calories}</Typography>
+               <Typography>{recipe.protein}</Typography>
+               <Typography>{recipe.carb}</Typography>
+               {/* ING */}
+               <IconButton
+                  onClick={() => showIngredientsById(recipe.id)}
+                  color='primary'
+               >
+                  <LocalDiningIcon />
+               </IconButton>
+
+               <Box>
+                  {open === recipe.id
+                     ? recipe?.ingredients?.map((ing, index) => ing)
+                     : ''}
+               </Box>
+
+               <IconButton
+                  color='error'
+                  onClick={() => handleDeleteRecipe(recipe.id)}
+               >
+                  <ClearIcon />
+               </IconButton>
+            </Stack>
          </Box>
       )
    })
@@ -45,7 +89,6 @@ function RecipeSection() {
          bgcolor='#fff'
          borderRadius='11px'
       >
-         hhg
          {useIsArray(recipes, renderedRecipes)}
          {useIsArray(
             recipes,
