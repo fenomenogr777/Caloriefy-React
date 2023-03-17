@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit'
 const formSlice = createSlice({
    name: 'form',
    initialState: {
-      query: '',
       userData: [],
+      userBMI: [],
       userIsOpen: false,
    },
    reducers: {
@@ -17,9 +17,13 @@ const formSlice = createSlice({
       deleteUserData(state, action) {
          state.userData = []
       },
+      getUserBMI(state, action) {
+         state.userBMI = action.payload
+      },
    },
 })
 
-export const { getUserData, openUserData, deleteUserData } = formSlice.actions
+export const { getUserData, openUserData, deleteUserData, getUserBMI } =
+   formSlice.actions
 
 export const formReducer = formSlice.reducer

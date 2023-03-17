@@ -76,6 +76,7 @@ function CalorieModal() {
 
    return (
       <Box>
+         {/* CLICK TO OPEN MODAL */}
          <IconButton
             onClick={handleOpen}
             color='primary'
@@ -83,6 +84,8 @@ function CalorieModal() {
          >
             <PersonAddIcon />
          </IconButton>
+
+         {/* MODAL */}
          <Modal
             open={userIsOpen}
             onClose={handleClose}
@@ -92,25 +95,36 @@ function CalorieModal() {
                borderRadius='11px'
                bgcolor='rgb(218, 214, 246)'
                width='500px'
-               height='500px'
+               height='auto'
                position='absolute'
                left='50%'
                top='50%'
-               sx={{ transform: 'translate(-50%, -70%)' }}
+               sx={{ transform: 'translate(-50%, -50%)' }}
             >
-               <IconButton
-                  onClick={handleClose}
-                  color='error'
+               {/* HEADER */}
+               <Box
+                  sx={{
+                     display: 'flex',
+                     flexDirection: 'row-reverse',
+                     justifyContent: 'space-between',
+                  }}
                >
-                  <ClearIcon />
-               </IconButton>
-               <Typography
-                  id='modal-modal-title'
-                  variant='h6'
-                  component='h2'
-               >
-                  Calculate your Calories
-               </Typography>
+                  <IconButton
+                     onClick={handleClose}
+                     color='error'
+                  >
+                     <ClearIcon />
+                  </IconButton>
+
+                  <Typography
+                     id='modal-modal-title'
+                     variant='h6'
+                     component='h2'
+                  >
+                     Calculate your Calories
+                  </Typography>
+               </Box>
+
                <Typography
                   component='span'
                   id='modal-modal-description'
@@ -149,13 +163,14 @@ function CalorieModal() {
                            </FormControl>
                            {/* NAME */}
                            <TextField
+                              autoCapitalize='form.name'
                               name='name'
                               value={form.name}
                               onChange={handleChange}
                               InputProps={{
                                  startAdornment: (
                                     <InputAdornment position='start'>
-                                       first name
+                                       name
                                     </InputAdornment>
                                  ),
                               }}

@@ -9,6 +9,7 @@ import { createTheme, ThemeProvider } from '@mui/material'
 const el = document.getElementById('root')
 const root = ReactDOM.createRoot(el)
 
+// MATERIAL UI CUSTOM THEME
 const theme = createTheme({
    palette: {
       primary: {
@@ -17,7 +18,7 @@ const theme = createTheme({
    },
 })
 
-console.log(theme)
+
 root.render(
    <Provider store={store}>
       <ThemeProvider theme={theme}>

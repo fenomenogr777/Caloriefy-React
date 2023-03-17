@@ -10,38 +10,42 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteIngredient, addRecipe, addMeal, deleteAllMeal } from '../store'
 import useIsArray from '../hooks/useIsArray'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import ClearIcon from '@mui/icons-material/Clear'
+import { all } from 'axios'
 
 function FoodSection() {
    const [recipeName, setRecipeName] = useState('')
    const dispatch = useDispatch()
 
-   const { meal, total } = useSelector(({ storeFood: { meal } }) => {
-      // IF MEAL EMPTY RETURN EMPTY ARRAYS
-      if (meal.length === 0) return { meal: [], total: [] }
+   const { meal, total, recipes } = useSelector(
+      ({ storeFood: { meal, recipes } }) => {
+         // IF MEAL EMPTY RETURN EMPTY ARRAYS
+         if (meal.length === 0) return { meal: [], total: [] }
 
-      let storeFood = {
-         meal,
-         total: {
-            calories: meal.reduce((total, meal) => {
-               return Math.round(total + meal?.calories)
-            }, 0),
-            protein: meal.reduce((total, meal) => {
-               return Math.round(total + meal?.protein)
-            }, 0),
-            carb: meal.reduce((total, meal) => {
-               return Math.round(total + meal?.carb)
-            }, 0),
-            fat: meal.reduce((total, meal) => {
-               return Math.round(total + meal?.fat)
-            }, 0),
-         },
+         let storeFood = {
+            recipes,
+            meal,
+            total: {
+               calories: meal.reduce((total, meal) => {
+                  return Math.round(total + meal?.calories)
+               }, 0),
+               protein: meal.reduce((total, meal) => {
+                  return Math.round(total + meal?.protein)
+               }, 0),
+               carb: meal.reduce((total, meal) => {
+                  return Math.round(total + meal?.carb)
+               }, 0),
+               fat: meal.reduce((total, meal) => {
+                  return Math.round(total + meal?.fat)
+               }, 0),
+            },
+         }
+
+         return storeFood
       }
-
-      return storeFood
-   })
+   )
 
    console.log(meal, total)
 
@@ -83,6 +87,7 @@ function FoodSection() {
 
    const handleAddRecipe = e => {
       e.preventDefault()
+      
       dispatch(
          addRecipe({
             name: recipeName,
@@ -94,6 +99,11 @@ function FoodSection() {
             ingredients: meal.map(ing => `${ing.name}-${ing.serving}gr`),
          })
       )
+
+      console.log(...recipes)
+
+  
+
       dispatch(deleteAllMeal())
       setRecipeName('')
    }

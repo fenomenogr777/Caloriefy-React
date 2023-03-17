@@ -1,9 +1,14 @@
 import { Box, Button, Typography } from '@mui/material'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useIsArray from '../hooks/useIsArray'
-import { openUserData, deleteUserData } from '../store'
+import { openUserData, deleteUserData, getUserBMI, getUserData } from '../store'
 
 function UserSection() {
+   const [data, setData] = useState('')
+   const dispatch = useDispatch()
+
+   // GET TOTAL DATA FROM RECIPES
    const totalNutrition = useSelector(({ storeFood: { recipes } }) => {
       return recipes.reduce(
          (total, recipe) => {
@@ -18,47 +23,58 @@ function UserSection() {
       )
    })
 
-   const userData = useSelector(({ storeForm: { userData } }) => {
-      // GUARD
-      if (userData.length === 0) return []
+   // GET USERDATA
+   const { userData, userBMI } = useSelector(
+      ({ storeForm: { userData, userBMI } }) => {
+         // GUARD RETURN []
+         if (userData.length === 0) return { userData: [], userBMI: {} }
 
-      const data = userData[0]
+         const data = userData[0]
 
-      // MALE
-      if (data.gender === 'male') {
-         let bmi = Math.round(
-            (66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
-               data.activity *
-               data.yourGoal
-         )
+         // MALE CALCULATION
+         if (data.gender === 'male') {
+            let bmi = Math.round(
+               (66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
+                  data.activity *
+                  data.yourGoal
+            )
+            // dispatch(getUserBMI('gfdgd'))
 
-         return {
-            name: data.name,
-            calories: bmi,
-            protein: Math.round((bmi * 22) / 100 / 4),
-            carb: Math.round((bmi * 55) / 100 / 4),
-            fat: Math.round((bmi * 23) / 100 / 9),
+            return {
+               userBMI,
+               userData: {
+                  name: data.name,
+                  calories: bmi,
+                  protein: Math.round((bmi * 22) / 100 / 4),
+                  carb: Math.round((bmi * 55) / 100 / 4),
+                  fat: Math.round((bmi * 23) / 100 / 9),
+               },
+            }
+         }
+
+         // FEMALE CALCULATION
+         if (data.gender === 'female') {
+            let bmi = Math.round(
+               (655 +
+                  9.6 * +data.weight +
+                  1.8 * +data.height -
+                  4.7 * +data.age) *
+                  data.activity *
+                  data.yourGoal
+            )
+
+            return {
+               name: data.name,
+               calories: bmi,
+               protein: Math.round((bmi * 22) / 100 / 4),
+               carb: Math.round((bmi * 55) / 100 / 4),
+               fat: Math.round((bmi * 23) / 100 / 9),
+            }
          }
       }
-      // FEMALE
-      if (data.gender === 'female') {
-         let bmi = Math.round(
-            (655 + 9.6 * +data.weight + 1.8 * +data.height - 4.7 * +data.age) *
-               data.activity *
-               data.yourGoal
-         )
+   )
 
-         return {
-            name: data.name,
-            calories: bmi,
-            protein: Math.round((bmi * 22) / 100 / 4),
-            carb: Math.round((bmi * 55) / 100 / 4),
-            fat: Math.round((bmi * 23) / 100 / 9),
-         }
-      }
-   })
-
-   const dispatch = useDispatch()
+   console.log(userBMI)
 
    const handleOpen = () => {
       dispatch(openUserData())
@@ -67,55 +83,117 @@ function UserSection() {
    const handleDeleteUserData = () => {
       dispatch(deleteUserData())
    }
-   console.log(userData, totalNutrition)
+   console.log(totalNutrition)
+
+   const [open, setOpen] = useState(false)
+
+   const handleClose = () => {
+      setOpen(true)
+      setTimeout(() => {
+         setOpen(false)
+      }, 2000)
+   }
+
+   const handleSaveData = () => {
+      dispatch(getUserBMI(userData))
+   }
+
+   useEffect(() => {
+      const data = JSON.parse(window.localStorage.getItem('USER_DATA_STORE'))
+      console.log(data)
+      dispatch(getUserBMI(data))
+   }, [])
+   console.log(data)
+
+   useEffect(() => {
+      if (!userBMI.name) return
+      window.localStorage.setItem('USER_DATA_STORE', JSON.stringify(userBMI))
+   }, [userBMI])
 
    return (
       <Box
-         padding='1rem'
-         height='300px'
+         height='320px'
          bgcolor='#fff'
          borderRadius='11px'
+         display='flex'
+         flexDirection='column'
+         gap={5}
       >
          <Box>
-            {useIsArray(
-               userData,
-               <Box>
-                  <Typography
-                     variant='h6'
-                     textTransform='capitalize'
-                  >
-                     Hello {userData?.name} ,
-                  </Typography>
-                  <Typography>
-                     {Math.round(userData?.calories - totalNutrition.calories)}/
-                     {userData?.calories} Calories
-                  </Typography>
-                  <Typography>
-                     {Math.round(userData?.protein - totalNutrition.protein)}/
-                     {userData?.protein} Protein
-                  </Typography>
-                  <Typography>
-                     {Math.round(userData?.carb - totalNutrition.carb)}/
-                     {userData?.carb} Carb
-                  </Typography>
-                  <Typography>
-                     {Math.round(userData?.fat - totalNutrition.fat)}/
-                     {userData?.fat} Fat
-                  </Typography>
-                  <Button
-                     onClick={handleDeleteUserData}
-                     variant='contained'
-                     color='error'
-                  >
-                     Delete Data
-                  </Button>
-               </Box>,
-               <Button
-                  onClick={handleOpen}
-                  variant='contained'
+            <Typography
+               variant='subtitle2'
+               color='#fff'
+               bgcolor='primary.main'
+               align='center'
+               sx={{ borderTopLeftRadius: '9px', borderTopRightRadius: '9px' }}
+            >
+               USER
+            </Typography>
+         </Box>
+
+         <Box alignSelf='center'>
+            {true ? (
+               <Box
+               display='flex'
+               flexDirection='column'
+               alignItems='space-between'
                >
-                  Set up Your calories data
-               </Button>
+                  <Typography>{userBMI.calories}</Typography>
+                  <Box>
+                     <Typography
+                        variant='h6'
+                        textTransform='capitalize'
+                     >
+                        Hello {userData?.name} ,
+                     </Typography>
+                     <Typography>
+                        {Math.round(
+                           data.calories ??
+                              userData?.calories - totalNutrition.calories
+                        )}
+                        /{userData?.calories} Calories
+                     </Typography>
+                     <Typography>
+                        {Math.round(userData?.protein - totalNutrition.protein)}
+                        /{userData?.protein} Protein
+                     </Typography>
+                     <Typography>
+                        {Math.round(userData?.carb - totalNutrition.carb)}/
+                        {userData?.carb} Carb
+                     </Typography>
+                     <Typography>
+                        {Math.round(userData?.fat - totalNutrition.fat)}/
+                        {userData?.fat} Fat
+                     </Typography>
+                  </Box>
+                  {/* IF USERBMI EMTY = SAVE ELSE DELETE BUTTON */}
+                  {userBMI?.name ? (
+                     <Button
+                        variant='contained'
+                        onClick={handleSaveData}
+                     >
+                        Save Data
+                     </Button>
+                  ) : (
+                     <Button
+                        onClick={handleDeleteUserData}
+                        variant='contained'
+                        color='error'
+                        size='small'
+                     >
+                        Delete Data
+                     </Button>
+                  )}
+                  {/* SETUP CALORIES */}
+               </Box>
+            ) : (
+               // <Button
+               //    onClick={handleOpen}
+               //    variant='contained'
+               // >
+               //    Set up Your calories data
+               // </Button>
+               ''
             )}
          </Box>
       </Box>

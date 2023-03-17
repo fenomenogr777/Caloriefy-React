@@ -5,6 +5,7 @@ import FoodSection from './sections/FoodSection'
 import RecipeSection from './sections/RecipeSection'
 import UserSection from './sections/UserSection'
 import FooterSection from './sections/FooterSection'
+
 function App() {
    return (
       <Box
@@ -30,12 +31,15 @@ function App() {
                      spacing={2}
                      container
                   >
+                     {/* HEADER SECTION (1) */}
                      <Grid
                         item
                         md={12}
                      >
                         <HeaderSection />
                      </Grid>
+
+                     {/* INGREDIENT SECTION (2) */}
                      <Grid
                         item
                         md={5}
@@ -43,6 +47,7 @@ function App() {
                         <IngredientSection />
                      </Grid>
 
+                     {/* FOOD SECTION (3) */}
                      <Grid
                         item
                         md={7}
@@ -53,16 +58,19 @@ function App() {
                         item
                         md={7}
                      >
+                        {/* RECIPE SECTION (4) */}
                         <RecipeSection />
                      </Grid>
                      <Grid
                         item
                         md={5}
                      >
+                        {/* USER SECTION (5) */}
                         <UserSection />
                      </Grid>
                   </Grid>
                </Box>
+               {/* FOOTER SECTION (6) */}
                <FooterSection />
             </Box>
          </Container>

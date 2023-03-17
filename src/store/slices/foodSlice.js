@@ -1,134 +1,127 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { getFood } from '../thunks/getFood'
 
 const foodSlice = createSlice({
    name: 'food',
    initialState: {
-      ingredientData:  {
-         calories: 0.513,
-         carb: 0.049,
-         fat: 0.019,
-         id: '3nJXKFIAFfP543B4329RIsI',
-         name: 'milk',
-         protein: 0.035,
-         serving: 100,
+      ingredientData: {
+         isloading: false,
+         data: {},
+         error: null,
       },
-      changedValue: '',
       meal: [
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFfHZ9R43TrIsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJFIAFfPB956RTrIsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 50.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nKFIAFfPB987RTrIsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFfPB9T87rIsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFfPB9RTrII8',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFf423PB9TrIsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFfPBRTr432IsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
+         // {
+         //    calories: 51,
+         //    carb: 5,
+         //    fat: 2,
+         //    id: 'gqFLy85atdpdcHfvgy_JI',
+         //    name: 'milk',
+         //    protein: 4,
+         //    serving: 100,
+         //    servingOriginal: 100,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 5,
+         //    fat: 2,
+         //    id: 'gqFLy43242385atdpdcHfvgy_JI',
+         //    name: 'water',
+         //    protein: 4,
+         //    serving: 100,
+         //    servingOriginal: 100,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 5,
+         //    fat: 2,
+         //    id: 'gqFLy854545atdpdcHfvgy_JI',
+         //    name: 'potato',
+         //    protein: 4,
+         //    serving: 100,
+         //    servingOriginal: 100,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 5,
+         //    fat: 2,
+         //    id: '4343',
+         //    name: 'cheese',
+         //    protein: 4,
+         //    serving: 100,
+         //    servingOriginal: 100,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 5,
+         //    fat: 2,
+         //    id: 'gqFLy84345atdpdcHfvgy_JI',
+         //    name: 'oats',
+         //    protein: 4,
+         //    serving: 100,
+         //    servingOriginal: 100,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 5,
+         //    fat: 2,
+         //    id: 'gqFLy85at444dpdcHfvgy_JI',
+         //    name: 'yoghurt',
+         //    protein: 4,
+         //    serving: 100,
+         //    servingOriginal: 100,
+         // },
       ],
       recipes: [
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAB9RTr423IsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFB9RTr423IsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories:513,
-            carb: 49,
-            fat:19,
-            id: '3nJXKFIAFfPB4329RIsI',
-            name: 'milk',
-            protein: 35,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFfPB4239rIsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
-         {
-            calories: 0.513,
-            carb: 0.049,
-            fat: 0.019,
-            id: '3nJXKFIAFB9RgfdTrIsI',
-            name: 'milk',
-            protein: 0.035,
-            serving: 100,
-         },
+         // {
+         //    calories: 51,
+         //    carb: 50,
+         //    fat: 20,
+         //    id: '70E5E8KCj_sjtauQDmx',
+         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
+         //    name: 'Proino',
+         //    protein: 40,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 50,
+         //    fat: 20,
+         //    id: '70E5E8KCj_sjtuQDmx',
+         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
+         //    name: 'Proino',
+         //    protein: 40,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 50,
+         //    fat: 20,
+         //    id: '70E5E8KCj_sjgYuQDmx',
+         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
+         //    name: 'Proino',
+         //    protein: 40,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 50,
+         //    fat: 20,
+         //    id: '70E5ECj_sjtagYuQDmx',
+         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
+         //    name: 'Proino',
+         //    protein: 40,
+         // },
+         // {
+         //    calories: 51,
+         //    carb: 50,
+         //    fat: 20,
+         //    id: '70EKCj_sjtagYuQDmx',
+         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
+         //    name: 'Proino',
+         //    protein: 40,
+         // },
       ],
    },
    reducers: {
       addIngredientData(state, action) {
-         state.ingredientData = action.payload
+         state.ingredientData.data = action.payload
       },
       addMeal(state, action) {
          state.meal.push(action.payload)
@@ -145,6 +138,12 @@ const foodSlice = createSlice({
       addRecipe(state, action) {
          state.recipes.push(action.payload)
       },
+      addRecipesLocalStorage(state, action) {
+         if (Array(action.payload) && action.payload.length >= 1) {
+            state.recipes = action.payload
+         }
+      },
+
       deleteRecipe(state, action) {
          state.recipes = state.recipes.filter(recipe => {
             return recipe.id !== action.payload
@@ -153,6 +152,20 @@ const foodSlice = createSlice({
       deleteAllRecipes(state, _) {
          state.recipes = []
       },
+   },
+   extraReducers(builder) {
+      builder.addCase(getFood.pending, (state, action) => {
+         state.ingredientData.isloading = true
+      })
+      builder.addCase(getFood.fulfilled, (state, action) => {
+         console.log(action)
+         state.ingredientData.isloading = false
+         state.ingredientData.data = action.payload
+      })
+      builder.addCase(getFood.rejected, (state, action) => {
+         state.ingredientData.isloading = false
+         state.ingredientData.error = action.error
+      })
    },
 })
 
@@ -164,6 +177,7 @@ export const {
    deleteRecipe,
    deleteAllRecipes,
    deleteAllMeal,
+   addRecipesLocalStorage,
 } = foodSlice.actions
 
 export const foodReducer = foodSlice.reducer

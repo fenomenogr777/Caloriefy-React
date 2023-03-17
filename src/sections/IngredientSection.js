@@ -4,7 +4,6 @@ import {
    Divider,
    List,
    ListItem,
-   Stack,
    TextField,
    Typography,
 } from '@mui/material'
@@ -15,25 +14,37 @@ import useIsObject from '../hooks/useIsObject'
 
 function IngredientSection() {
    const [value, setValue] = useState(100)
+
    const dispatch = useDispatch()
 
-   const ingredientData = useSelector(({ storeFood: { ingredientData } }) => {
-      if (Object.keys(ingredientData).length === 0) return {}
+   // GET INGREDIENTDATA FROM REDUX
+   const ingredientData = useSelector(
+      ({
+         storeFood: {
+            ingredientData: { data },
+         },
+      }) => {
+         console.log(data)
+         if (data.name === 'Error') {
+            return { name: data.name, message: data.message, error: true }
+         }
 
-      ingredientData = {
-         name: ingredientData?.name,
-         id: ingredientData?.id,
-         calories: Math.round(ingredientData?.calories * value),
-         protein: Math.round(ingredientData?.protein * value),
-         carb: Math.round(ingredientData?.carb * value),
-         fat: Math.round(ingredientData?.fat * value),
-         serving: +value,
-         servingOriginal: ingredientData?.serving,
+         // CHANGE INGREDIENT DATA BASED ON INPUT VALUE
+         const ingredientData = {
+            name: data?.name,
+            id: data?.id,
+            calories: Math.round(data?.calories * value),
+            protein: Math.round(data?.protein * value),
+            carb: Math.round(data?.carb * value),
+            fat: Math.round(data?.fat * value),
+            serving: +value,
+            servingOriginal: data?.serving,
+         }
+         return ingredientData
       }
-      return ingredientData
-   })
-
+   )
    console.log(ingredientData)
+   
    const handleChange = e => {
       setValue(e.target.value)
    }
@@ -44,7 +55,6 @@ function IngredientSection() {
       dispatch(addIngredientData({}))
       setValue(100)
    }
-
    return (
       <Box
          height='320px'
@@ -65,48 +75,50 @@ function IngredientSection() {
                INGREDIENT
             </Typography>
 
-            {/* {useIsObject(
-               ingredientData, */}
+            {/* LIST */}
 
-            <List>
-               <ListItem>
-                  <Typography>
-                     {ingredientData.serving}gr of {ingredientData.name}
-                  </Typography>
-               </ListItem>
-               <Divider color="purple" />
-               <Typography>Calories: {ingredientData.calories}</Typography>
-               <Divider />
-               <Typography>Protein: {ingredientData.protein}</Typography>
-               <Divider />
-               <Typography>Carb: {ingredientData.carb}</Typography>
-               <Divider />
-               <Typography>Fat: {ingredientData.fat}</Typography>
-               <Divider />
-            </List>
+            {ingredientData?.name && (
+               <List>
+                  <ListItem>
+                     <Typography>
+                        {ingredientData?.serving}gr of {ingredientData?.name}
+                     </Typography>
+                  </ListItem>
+                  <Divider color='purple' />
+                  <Typography>Calories: {ingredientData?.calories}</Typography>
+                  <Divider />
+                  <Typography>Protein: {ingredientData?.protein}</Typography>
+                  <Divider />
+                  <Typography>Carb: {ingredientData?.carb}</Typography>
+                  <Divider />
+                  <Typography>Fat: {ingredientData?.fat}</Typography>
+                  <Divider />
+               </List>
+            )}
          </Box>
-
-         <form
-            onSubmit={handleSubmit}
-            style={{ display: 'flex' }}
-         >
-            <TextField
-               label='Serving (gr)'
-               size='small'
-               type='number'
-               value={value}
-               onChange={handleChange}
-            />
-            <Button
-               variant='contained'
-               type='submit'
+         {/* FORM */}
+         {ingredientData?.name && (
+            <form
+               onSubmit={handleSubmit}
+               style={{ display: 'flex' }}
             >
-               Add ingredient
-            </Button>
-         </form>
-
-         {/* )} */}
+               <TextField
+                  label='Serving (gr)'
+                  size='small'
+                  type='number'
+                  value={value}
+                  onChange={handleChange}
+               />
+               <Button
+                  variant='contained'
+                  type='submit'
+               >
+                  Add ingredient
+               </Button>
+            </form>
+         )}
       </Box>
    )
 }
+
 export default IngredientSection
