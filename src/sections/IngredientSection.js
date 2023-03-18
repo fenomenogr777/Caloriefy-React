@@ -15,9 +15,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addMeal, addIngredientData } from '../store'
 
 function IngredientSection() {
-   const [value, setValue] = useState(100)
-
    const dispatch = useDispatch()
+
+   // SERVING VALUE - DEFAULT TO 100gr
+   const [value, setValue] = useState(100)
 
    // GET INGREDIENTDATA FROM REDUX
    const { ingredientData, error, isLoading } = useSelector(
@@ -26,16 +27,7 @@ function IngredientSection() {
             ingredientData: { data, error, isLoading },
          },
       }) => {
-         console.log(data)
-         // if (data?.name === 'Error') {
-         //    return error={
-         //       name: data.name,
-         //       message: data.message,
-         //       error: true ,
-         //    }
-         // }
-
-         // CHANGE INGREDIENT DATA BASED ON INPUT VALUE
+         // changes ingredient data based on input value
          const ingredientData = {
             name: data?.name,
             id: data?.id,
@@ -49,19 +41,23 @@ function IngredientSection() {
          return { ingredientData, error, isLoading }
       }
    )
-   console.log(ingredientData)
-   console.log(error)
 
+   // HANDLES
    const handleChange = e => {
       setValue(e.target.value)
    }
 
    const handleSubmit = e => {
       e.preventDefault()
+      // add ingredient to meals array
       dispatch(addMeal(ingredientData))
+      // empty ingredient data
       dispatch(addIngredientData({}))
+      // set default serving value to 100gr
       setValue(100)
    }
+
+   // JSX
    return (
       <Box
          height='320px'
@@ -73,6 +69,7 @@ function IngredientSection() {
          position='relative'
       >
          <Box>
+            {/* SECTION TITLE */}
             <Typography
                variant='subtitle2'
                color='#fff'
@@ -82,7 +79,8 @@ function IngredientSection() {
             >
                INGREDIENT
             </Typography>
-            {/* WHEN LOADING TO GET RESULT */}
+
+            {/* WHEN LOADING SHOWING LOAD ICON */}
             {isLoading && (
                <Box
                   position='absolute'
@@ -105,8 +103,7 @@ function IngredientSection() {
                </Box>
             )}
 
-            {/* WHEN CANT GET RESULT AND GETS ERROR */}
-
+            {/* WHEN GET ERROR SHOW ERROR MESSAGE */}
             {!isLoading && error && (
                <Box>
                   <Alert severity='warning'>
@@ -116,7 +113,7 @@ function IngredientSection() {
                </Box>
             )}
 
-            {/* LIST */}
+            {/* WHEN GET DATA -SHOW LIST OF DATA*/}
             {!error && !isLoading && ingredientData?.name && (
                <List>
                   <ListItem>
@@ -136,6 +133,7 @@ function IngredientSection() {
                </List>
             )}
          </Box>
+
          {/* FORM */}
          {!error && !isLoading && ingredientData?.name && (
             <form
