@@ -1,6 +1,9 @@
 import {
+   Alert,
+   AlertTitle,
    Box,
    Button,
+   CircularProgress,
    Divider,
    List,
    ListItem,
@@ -10,7 +13,6 @@ import {
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { addMeal, addIngredientData } from '../store'
-import useIsObject from '../hooks/useIsObject'
 
 function IngredientSection() {
    const [value, setValue] = useState(100)
@@ -18,16 +20,20 @@ function IngredientSection() {
    const dispatch = useDispatch()
 
    // GET INGREDIENTDATA FROM REDUX
-   const ingredientData = useSelector(
+   const { ingredientData, error, isLoading } = useSelector(
       ({
          storeFood: {
-            ingredientData: { data },
+            ingredientData: { data, error, isLoading },
          },
       }) => {
          console.log(data)
-         if (data.name === 'Error') {
-            return { name: data.name, message: data.message, error: true }
-         }
+         // if (data?.name === 'Error') {
+         //    return error={
+         //       name: data.name,
+         //       message: data.message,
+         //       error: true ,
+         //    }
+         // }
 
          // CHANGE INGREDIENT DATA BASED ON INPUT VALUE
          const ingredientData = {
@@ -40,11 +46,12 @@ function IngredientSection() {
             serving: +value,
             servingOriginal: data?.serving,
          }
-         return ingredientData
+         return { ingredientData, error, isLoading }
       }
    )
    console.log(ingredientData)
-   
+   console.log(error)
+
    const handleChange = e => {
       setValue(e.target.value)
    }
@@ -63,6 +70,7 @@ function IngredientSection() {
          display='flex'
          flexDirection='column'
          justifyContent='space-between'
+         position='relative'
       >
          <Box>
             <Typography
@@ -74,10 +82,42 @@ function IngredientSection() {
             >
                INGREDIENT
             </Typography>
+            {/* WHEN LOADING TO GET RESULT */}
+            {isLoading && (
+               <Box
+                  position='absolute'
+                  right='50%'
+                  bottom='50%'
+                  sx={{ transform: 'translate(50%,50%)' }}
+                  display='flex'
+                  flexDirection='column'
+                  alignItems='center'
+                  gap={2}
+               >
+                  <CircularProgress color='primary' />
+
+                  <Typography
+                     color='primary'
+                     variant='h6'
+                  >
+                     Loading...
+                  </Typography>
+               </Box>
+            )}
+
+            {/* WHEN CANT GET RESULT AND GETS ERROR */}
+
+            {!isLoading && error && (
+               <Box>
+                  <Alert severity='warning'>
+                     <AlertTitle>Warning</AlertTitle>
+                     {error.message}
+                  </Alert>
+               </Box>
+            )}
 
             {/* LIST */}
-
-            {ingredientData?.name && (
+            {!error && !isLoading && ingredientData?.name && (
                <List>
                   <ListItem>
                      <Typography>
@@ -97,7 +137,7 @@ function IngredientSection() {
             )}
          </Box>
          {/* FORM */}
-         {ingredientData?.name && (
+         {!error && !isLoading && ingredientData?.name && (
             <form
                onSubmit={handleSubmit}
                style={{ display: 'flex' }}

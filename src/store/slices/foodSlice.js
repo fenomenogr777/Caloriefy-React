@@ -5,7 +5,7 @@ const foodSlice = createSlice({
    name: 'food',
    initialState: {
       ingredientData: {
-         isloading: false,
+         isLoading: false,
          data: {},
          error: null,
       },
@@ -154,16 +154,16 @@ const foodSlice = createSlice({
       },
    },
    extraReducers(builder) {
-      builder.addCase(getFood.pending, (state, action) => {
-         state.ingredientData.isloading = true
+      builder.addCase(getFood.pending, (state, _) => {
+         state.ingredientData.isLoading = true
       })
       builder.addCase(getFood.fulfilled, (state, action) => {
-         console.log(action)
-         state.ingredientData.isloading = false
+         state.ingredientData.isLoading = false
          state.ingredientData.data = action.payload
+         state.ingredientData.error = null
       })
       builder.addCase(getFood.rejected, (state, action) => {
-         state.ingredientData.isloading = false
+         state.ingredientData.isLoading = false
          state.ingredientData.error = action.error
       })
    },

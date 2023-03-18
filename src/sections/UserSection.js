@@ -27,7 +27,8 @@ function UserSection() {
    const { userData, userBMI } = useSelector(
       ({ storeForm: { userData, userBMI } }) => {
          // GUARD RETURN []
-         if (userData.length === 0) return { userData: [], userBMI: {} }
+         if (userData.length === 0 && userBMI.length === 0)
+            return { userData: [], userBMI: [] }
 
          const data = userData[0]
 
@@ -106,7 +107,7 @@ function UserSection() {
    console.log(data)
 
    useEffect(() => {
-      if (!userBMI.name) return
+      // if (!userBMI?.name) return
       window.localStorage.setItem('USER_DATA_STORE', JSON.stringify(userBMI))
    }, [userBMI])
 
@@ -134,36 +135,35 @@ function UserSection() {
          <Box alignSelf='center'>
             {true ? (
                <Box
-               display='flex'
-               flexDirection='column'
-               alignItems='space-between'
+                  display='flex'
+                  flexDirection='column'
+                  alignItems='space-between'
                >
-                  <Typography>{userBMI.calories}</Typography>
                   <Box>
                      <Typography
                         variant='h6'
                         textTransform='capitalize'
                      >
-                        Hello {userData?.name} ,
+                        Hello {userBMI?.name} ,
                      </Typography>
                      <Typography>
                         {Math.round(
                            data.calories ??
-                              userData?.calories - totalNutrition.calories
+                              userBMI?.calories - totalNutrition.calories
                         )}
-                        /{userData?.calories} Calories
+                        /{userBMI?.calories} Calories
                      </Typography>
                      <Typography>
-                        {Math.round(userData?.protein - totalNutrition.protein)}
-                        /{userData?.protein} Protein
+                        {Math.round(userBMI?.protein - totalNutrition.protein)}/
+                        {userBMI?.protein} Protein
                      </Typography>
                      <Typography>
-                        {Math.round(userData?.carb - totalNutrition.carb)}/
-                        {userData?.carb} Carb
+                        {Math.round(userBMI?.carb - totalNutrition.carb)}/
+                        {userBMI?.carb} Carb
                      </Typography>
                      <Typography>
-                        {Math.round(userData?.fat - totalNutrition.fat)}/
-                        {userData?.fat} Fat
+                        {Math.round(userBMI?.fat - totalNutrition.fat)}/
+                        {userBMI?.fat} Fat
                      </Typography>
                   </Box>
                   {/* IF USERBMI EMTY = SAVE ELSE DELETE BUTTON */}
