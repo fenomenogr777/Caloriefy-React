@@ -1,16 +1,29 @@
-import { Box, Button, IconButton, Typography } from '@mui/material'
+import {
+   Badge,
+   Box,
+   Button,
+   IconButton,
+   Popover,
+   Typography,
+} from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
 import useIsArray from '../hooks/useIsArray'
-import { deleteRecipe, deleteAllRecipes } from '../store'
+import {
+   deleteRecipe,
+   deleteAllRecipes,
+   addRecipesLocalStorage,
+} from '../store'
 import ClearIcon from '@mui/icons-material/Clear'
 import LocalDiningIcon from '@mui/icons-material/LocalDining'
 import { useEffect, useState } from 'react'
 import { Stack } from '@mui/system'
-import { addRecipe, addRecipesLocalStorage } from '../store'
 
 function RecipeSection() {
-   const [open, setOpen] = useState('false')
+   const dispatch = useDispatch()
+   // GET THE VALUE FROM "showIngredientsById"
+   const [open, setOpen] = useState('')
 
+   // SHOWS THE  CURRENT RECIPE BASED ON HIS ID
    const showIngredientsById = id => {
       setOpen(id)
       if (id === open) {
@@ -18,30 +31,7 @@ function RecipeSection() {
       }
    }
 
-   const dispatch = useDispatch()
-   const state = useSelector(state => state)
-   console.log(state)
-
-   const recipes = useSelector(({ storeFood: { recipes } }) => {
-      return recipes
-   })
-   console.log(recipes)
-
-   // LOAD RECIPES FROM LOCAL STORAGE IF EXIST
-   useEffect(() => {
-      let data = JSON.parse(window.localStorage.getItem('RECIPES_STORE')) || []
-      console.log(data)
-      if (data.length === 0) return
-      const storedRecipes = data?.map(recipe => recipe)
-      console.log(...storedRecipes)
-      dispatch(addRecipesLocalStorage(storedRecipes))
-   }, [dispatch])
-
-   // SET RECIPES EVERYTIME THE ARRAY CHANGES
-   useEffect(() => {
-      window.localStorage.setItem('RECIPES_STORE', JSON.stringify([...recipes]))
-   }, [recipes])
-
+   // HANDLES
    const handleDeleteRecipe = id => {
       dispatch(deleteRecipe(id))
    }
@@ -49,6 +39,26 @@ function RecipeSection() {
       dispatch(deleteAllRecipes())
    }
 
+   const recipes = useSelector(({ storeFood: { recipes } }) => {
+      return recipes
+   })
+
+   // LOAD RECIPES FROM LOCAL STORAGE
+   useEffect(() => {
+      let data = JSON.parse(window.localStorage.getItem('RECIPES_STORE')) || []
+      if (data.length === 0) return
+      const storedRecipes = data?.map(recipe => recipe)
+      dispatch(addRecipesLocalStorage(storedRecipes))
+   }, [dispatch])
+
+   // SET RECIPES ON LOCAL STORAGE
+   useEffect(() => {
+      window.localStorage.setItem('RECIPES_STORE', JSON.stringify([...recipes]))
+   }, [recipes])
+
+
+
+   // LIST OF RECIPES
    const renderedRecipes = recipes?.map(recipe => {
       return (
          <Box key={recipe.id}>
@@ -57,22 +67,121 @@ function RecipeSection() {
                alignItems='center'
                gap={1}
             >
-               <Typography variant='h6'>{recipe.name}</Typography>
-               <Typography>{recipe.calories}</Typography>
-               <Typography>{recipe.protein}</Typography>
-               <Typography>{recipe.carb}</Typography>
-               {/* ING */}
+               <Box>
+                  <Typography
+                     fontWeight={500}
+                     color='success'
+                     variant='h5'
+                     textTransform='Capitalize'
+                  >
+                     {recipe.name}
+                  </Typography>
+               </Box>
+               <Typography>(</Typography>
+               {/* CALORIES BOX */}
+               <Box
+                  display='flex'
+                  gap={0.5}
+                  alignItems='baseline'
+               >
+                  <Typography
+                     variant='body1'
+                     fontWeight={600}
+                     color='secondary.dark'
+                  >
+                     {recipe.calories}
+                  </Typography>
+                  <Typography
+                     variant='caption'
+                     fontWeight={600}
+                  >
+                     Calories
+                  </Typography>
+               </Box>
+
+               <Box
+                  display='flex'
+                  gap={0.5}
+                  alignItems='baseline'
+               >
+                  <Typography
+                     variant='body1'
+                     fontWeight={600}
+                     color='secondary.dark'
+                  >
+                     {recipe.protein}
+                  </Typography>
+                  <Typography
+                     variant='caption'
+                     fontWeight={600}
+                  >
+                     Protein
+                  </Typography>
+               </Box>
+
+               <Box
+                  display='flex'
+                  gap={0.5}
+                  alignItems='baseline'
+               >
+                  <Typography
+                     variant='body1'
+                     fontWeight={600}
+                     color='secondary.dark'
+                  >
+                     {recipe.carb}
+                  </Typography>
+                  <Typography
+                     variant='caption'
+                     fontWeight={600}
+                  >
+                     Carb
+                  </Typography>
+               </Box>
+
+               <Box
+                  display='flex'
+                  gap={0.5}
+                  alignItems='baseline'
+               >
+                  <Typography
+                     variant='body1'
+                     fontWeight={600}
+                     color='secondary.dark'
+                  >
+                     {recipe.fat}
+                  </Typography>
+                  <Typography
+                     variant='caption'
+                     fontWeight={600}
+                  >
+                     Fat
+                  </Typography>
+               </Box>
+               <Typography>)</Typography>
+
                <IconButton
+                  // SHOWS INGREDIENTS
                   onClick={() => showIngredientsById(recipe.id)}
                   color='primary'
                >
-                  <LocalDiningIcon />
+                  <Badge
+                     badgeContent={recipe.ingredients.length}
+                     color='secondary'
+                     anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                     }}
+                  >
+                     <LocalDiningIcon />
+                  </Badge>
                </IconButton>
 
                <Box>
                   {open === recipe.id
                      ? recipe?.ingredients?.map((ing, index) => ing)
-                     : ''}
+                     : // recipe?.ingredients?.map((ing, index) => ing)
+                       ''}
                </Box>
 
                <IconButton
@@ -86,6 +195,7 @@ function RecipeSection() {
       )
    })
 
+   // JSX
    return (
       <Box
          height='320px'

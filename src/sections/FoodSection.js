@@ -6,23 +6,56 @@ import {
    TextField,
    Typography,
 } from '@mui/material'
+import ClearIcon from '@mui/icons-material/Clear'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteIngredient, addRecipe, deleteAllMeal } from '../store'
 import useIsArray from '../hooks/useIsArray'
 import { useState } from 'react'
-
-import ClearIcon from '@mui/icons-material/Clear'
-
 import SnackBar from '../components/SnackBar'
 
 function FoodSection() {
-   const [recipeName, setRecipeName] = useState('')
-   const [openSnackbar, setOpenSnackbar] = useState(false)
    const dispatch = useDispatch()
+   // NAME OF THE RECIPE TO ADD
+   const [recipeName, setRecipeName] = useState('')
+   // SET THE SNACKBAR WHEN ADD RECIPE
+   const [openSnackbar, setOpenSnackbar] = useState(false)
 
+   // HANDLES
+   const handleChange = e => {
+      setRecipeName(e.target.value)
+   }
+   const handleCloseSnackbar = () => {
+      setOpenSnackbar(false)
+   }
+   const handleDeleteIngredient = id => {
+      dispatch(deleteIngredient(id))
+   }
+   // ADDS RECIPE
+   const handleAddRecipe = e => {
+      e.preventDefault()
+      dispatch(
+         addRecipe({
+            name: recipeName,
+            id: meal[0].id,
+            calories: total.calories,
+            protein: total.protein,
+            carb: total.carb,
+            fat: total.fat,
+            ingredients: meal.map(ing => `${ing.name}-${ing.serving}gr`),
+         })
+      )
+      setOpenSnackbar(true)
+
+      console.log(...recipes)
+
+      dispatch(deleteAllMeal())
+      setRecipeName('')
+   }
+
+   // IMPORT MEAL/TOTAL/RECIPES
    const { meal, total, recipes } = useSelector(
       ({ storeFood: { meal, recipes } }) => {
-         // IF MEAL EMPTY RETURN EMPTY ARRAYS
+         // if meal empty return empty arrays
          if (meal.length === 0) return { meal: [], total: [] }
 
          let storeFood = {
@@ -43,17 +76,11 @@ function FoodSection() {
                }, 0),
             },
          }
-
          return storeFood
       }
    )
 
-   console.log(meal, total)
-
-   const handleDeleteIngredient = id => {
-      dispatch(deleteIngredient(id))
-   }
-
+   // SHOW THE LIST OF MEALS ON FOODSECTION
    const renderedMeals = meal?.map(meal => {
       return (
          <Box key={meal.id}>
@@ -69,7 +96,6 @@ function FoodSection() {
                   {meal.name}
                </Typography>
                <Typography>{meal.serving}gr</Typography>
-
                <Typography variant='overline'>({meal.calories}C</Typography>
                <Typography variant='overline'>{meal.protein}P</Typography>
                <Typography variant='overline'>{meal.carb}C</Typography>
@@ -82,36 +108,7 @@ function FoodSection() {
       )
    })
 
-   const handleChange = e => {
-      setRecipeName(e.target.value)
-   }
-
-   const handleCloseSnackbar = () => {
-      setOpenSnackbar(false)
-   }
-
-   const handleAddRecipe = e => {
-      e.preventDefault()
-
-      dispatch(
-         addRecipe({
-            name: recipeName,
-            id: meal[0].id,
-            calories: total.calories,
-            protein: total.protein,
-            carb: total.carb,
-            fat: total.fat,
-            ingredients: meal.map(ing => `${ing.name}-${ing.serving}gr`),
-         })
-      )
-      setOpenSnackbar(true)
-
-      console.log(...recipes)
-
-      dispatch(deleteAllMeal())
-      setRecipeName('')
-   }
-
+   // JSX
    return (
       <Box
          height='320px'
@@ -121,6 +118,7 @@ function FoodSection() {
          flexDirection='column'
          justifyContent='space-between'
       >
+         {/* TITLE */}
          <Typography
             variant='subtitle2'
             color='#fff'
@@ -130,6 +128,8 @@ function FoodSection() {
          >
             FOOD
          </Typography>
+
+         {/* LIST OF TOTAL AND MEALS */}
          <Box
             padding='0 1rem'
             display='flex'
@@ -137,6 +137,7 @@ function FoodSection() {
             justifyContent='space-between'
          >
             <Box>
+               {/* TOTAL */}
                {useIsArray(
                   meal,
                   <Box>
@@ -166,15 +167,17 @@ function FoodSection() {
                bgcolor='#fff'
                sx={{ overflowY: 'auto' }}
             >
+               {/* MEALS */}
                <Box alignSelf='flex-start'>
                   {useIsArray(meal, renderedMeals)}
                </Box>
             </Box>
          </Box>
+
          <Box>
             {useIsArray(
                meal,
-
+               // FORM
                <form
                   onSubmit={handleAddRecipe}
                   style={{ display: 'flex' }}

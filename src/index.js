@@ -12,12 +12,15 @@ const root = ReactDOM.createRoot(el)
 // MATERIAL UI CUSTOM THEME
 const theme = createTheme({
    palette: {
+      secondary: {
+         main: '#ccf381',
+         dark: '#40c057',
+      },
       primary: {
          main: 'rgb(72, 49, 212);',
       },
    },
 })
-
 
 root.render(
    <Provider store={store}>

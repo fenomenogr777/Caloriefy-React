@@ -5,6 +5,7 @@ import FoodSection from './sections/FoodSection'
 import RecipeSection from './sections/RecipeSection'
 import UserSection from './sections/UserSection'
 import FooterSection from './sections/FooterSection'
+import DarkMode from './components/DarkMode'
 
 function App() {
    return (
@@ -24,6 +25,7 @@ function App() {
                justifyContent='space-between'
             >
                <Box>
+                  <DarkMode />
                   <Grid
                      bgcolor='rgb(218, 214, 246)'
                      borderRadius='11px'
