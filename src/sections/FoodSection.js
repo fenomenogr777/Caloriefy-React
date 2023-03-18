@@ -1,22 +1,23 @@
 import {
    Box,
    Button,
-   Divider,
    IconButton,
    Stack,
    TextField,
    Typography,
 } from '@mui/material'
 import { useDispatch, useSelector } from 'react-redux'
-import { deleteIngredient, addRecipe, addMeal, deleteAllMeal } from '../store'
+import { deleteIngredient, addRecipe, deleteAllMeal } from '../store'
 import useIsArray from '../hooks/useIsArray'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import ClearIcon from '@mui/icons-material/Clear'
-import { all } from 'axios'
+
+import SnackBar from '../components/SnackBar'
 
 function FoodSection() {
    const [recipeName, setRecipeName] = useState('')
+   const [openSnackbar, setOpenSnackbar] = useState(false)
    const dispatch = useDispatch()
 
    const { meal, total, recipes } = useSelector(
@@ -85,9 +86,13 @@ function FoodSection() {
       setRecipeName(e.target.value)
    }
 
+   const handleCloseSnackbar = () => {
+      setOpenSnackbar(false)
+   }
+
    const handleAddRecipe = e => {
       e.preventDefault()
-      
+
       dispatch(
          addRecipe({
             name: recipeName,
@@ -99,10 +104,9 @@ function FoodSection() {
             ingredients: meal.map(ing => `${ing.name}-${ing.serving}gr`),
          })
       )
+      setOpenSnackbar(true)
 
       console.log(...recipes)
-
-  
 
       dispatch(deleteAllMeal())
       setRecipeName('')
@@ -191,6 +195,14 @@ function FoodSection() {
                </form>
             )}
          </Box>
+
+         {/* SNACKBAR WHEN ADD RECIPE */}
+         <SnackBar
+            children={'Recipe Added succesfully'}
+            open={openSnackbar}
+            onClose={handleCloseSnackbar}
+            autoHideTime={2000}
+         />
       </Box>
    )
 }

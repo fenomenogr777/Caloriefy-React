@@ -17,11 +17,10 @@ import {
    Typography,
 } from '@mui/material'
 import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import { useState } from 'react'
 import ClearIcon from '@mui/icons-material/Clear'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openUserData } from '../store'
-import { getUserData } from '../store'
+import { openUserData, getUserData } from '../store'
 
 function CalorieModal() {
    const dispatch = useDispatch()
@@ -39,7 +38,6 @@ function CalorieModal() {
       activity: '1.375',
       yourGoal: '1.15',
    })
-   console.log(userIsOpen)
 
    const handleChange = e => {
       const { name, value } = e.target

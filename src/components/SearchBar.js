@@ -1,23 +1,22 @@
 import { Box, Button, TextField } from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
 import { useDispatch } from 'react-redux'
 import { useState } from 'react'
-import SearchIcon from '@mui/icons-material/Search'
 import { getFood } from '../store'
 
 function SearchBar() {
+   const dispatch = useDispatch()
    const [value, setValue] = useState('')
 
-   const dispatch = useDispatch()
-
+   // HANDLES
    const handleChange = e => {
       setValue(e.target.value)
    }
 
-   // FETCH DATA USING REDUX THUNK ON getFood
    const handleSubmit = e => {
       e.preventDefault()
-      console.log(
-      dispatch(getFood(value)) )
+      // getFood is thunk getting user value and fetch data(data,error,isLoading)
+      dispatch(getFood(value))
       setValue('')
    }
 
