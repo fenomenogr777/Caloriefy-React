@@ -36,6 +36,7 @@ const store = configureStore({
 setupListeners(store.dispatch)
 
 export * from './thunks/getFood'
+export * from './thunks/getImage'
 
 export {
    store,

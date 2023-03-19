@@ -2,7 +2,7 @@ import { Box, Button, TextField } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 import { useDispatch } from 'react-redux'
 import { useState } from 'react'
-import { getFood } from '../store'
+import { getFood, getImage } from '../store'
 
 function SearchBar() {
    const dispatch = useDispatch()
@@ -17,6 +17,7 @@ function SearchBar() {
       e.preventDefault()
       // getFood is thunk getting user value and fetch data(data,error,isLoading)
       dispatch(getFood(value))
+      dispatch(getImage(value))
       setValue('')
    }
 

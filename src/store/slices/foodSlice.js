@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { getFood } from '../thunks/getFood'
+import { getImage } from '../thunks/getImage'
 
 const foodSlice = createSlice({
    name: 'food',
    initialState: {
+      images: {},
       ingredientData: {
          isLoading: false,
          data: {},
@@ -20,104 +22,8 @@ const foodSlice = createSlice({
             serving: 100,
             servingOriginal: 100,
          },
-         // {
-         //    calories: 51,
-         //    carb: 5,
-         //    fat: 2,
-         //    id: 'gqFLy43242385atdpdcHfvgy_JI',
-         //    name: 'water',
-         //    protein: 4,
-         //    serving: 100,
-         //    servingOriginal: 100,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 5,
-         //    fat: 2,
-         //    id: 'gqFLy854545atdpdcHfvgy_JI',
-         //    name: 'potato',
-         //    protein: 4,
-         //    serving: 100,
-         //    servingOriginal: 100,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 5,
-         //    fat: 2,
-         //    id: '4343',
-         //    name: 'cheese',
-         //    protein: 4,
-         //    serving: 100,
-         //    servingOriginal: 100,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 5,
-         //    fat: 2,
-         //    id: 'gqFLy84345atdpdcHfvgy_JI',
-         //    name: 'oats',
-         //    protein: 4,
-         //    serving: 100,
-         //    servingOriginal: 100,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 5,
-         //    fat: 2,
-         //    id: 'gqFLy85at444dpdcHfvgy_JI',
-         //    name: 'yoghurt',
-         //    protein: 4,
-         //    serving: 100,
-         //    servingOriginal: 100,
-         // },
       ],
-      recipes: [
-         // {
-         //    calories: 51,
-         //    carb: 50,
-         //    fat: 20,
-         //    id: '70E5E8KCj_sjtauQDmx',
-         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
-         //    name: 'Proino',
-         //    protein: 40,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 50,
-         //    fat: 20,
-         //    id: '70E5E8KCj_sjtuQDmx',
-         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
-         //    name: 'Proino',
-         //    protein: 40,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 50,
-         //    fat: 20,
-         //    id: '70E5E8KCj_sjgYuQDmx',
-         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
-         //    name: 'Proino',
-         //    protein: 40,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 50,
-         //    fat: 20,
-         //    id: '70E5ECj_sjtagYuQDmx',
-         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
-         //    name: 'Proino',
-         //    protein: 40,
-         // },
-         // {
-         //    calories: 51,
-         //    carb: 50,
-         //    fat: 20,
-         //    id: '70EKCj_sjtagYuQDmx',
-         //    ingredients: ['milk-100gr', 'Yoghurt-80gr'],
-         //    name: 'Proino',
-         //    protein: 40,
-         // },
-      ],
+      recipes: [],
    },
    reducers: {
       addIngredientData(state, action) {
@@ -166,6 +72,11 @@ const foodSlice = createSlice({
          state.ingredientData.isLoading = false
          state.ingredientData.error = action.error
       })
+      builder.addCase(getImage.pending, (state, action) => {})
+      builder.addCase(getImage.fulfilled, (state, action) => {
+         state.images = action.payload
+      })
+      builder.addCase(getImage.rejected, (state, action) => {})
    },
 })
 

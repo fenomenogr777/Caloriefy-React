@@ -26,5 +26,7 @@ const getNutritionDataApi = createApi({
    },
 })
 
-export const { useGetNutritionDataQuery} = getNutritionDataApi
+export const { useGetNutritionDataQuery } = getNutritionDataApi
 export { getNutritionDataApi }
+
+// DEN DOULEUEI ME QUERY PAIRNEI TA DATA APO THUNK

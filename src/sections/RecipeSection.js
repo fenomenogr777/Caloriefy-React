@@ -224,7 +224,6 @@ function RecipeSection() {
          col6: `${recipe.ingredients.map(ing => ing)}`,
       }
    })
-   console.log(rows)
 
    // JSX
    return (

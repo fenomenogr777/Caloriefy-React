@@ -5,6 +5,7 @@ import {
    Button,
    CircularProgress,
    Divider,
+   ImageList,
    List,
    ListItem,
    TextField,
@@ -21,9 +22,10 @@ function IngredientSection() {
    const [value, setValue] = useState(100)
 
    // GET INGREDIENTDATA FROM REDUX
-   const { ingredientData, error, isLoading } = useSelector(
+   const { ingredientData, error, isLoading, images } = useSelector(
       ({
          storeFood: {
+            images,
             ingredientData: { data, error, isLoading },
          },
       }) => {
@@ -38,7 +40,7 @@ function IngredientSection() {
             serving: +value,
             servingOriginal: data?.serving,
          }
-         return { ingredientData, error, isLoading }
+         return { ingredientData, error, isLoading, images }
       }
    )
 
@@ -115,7 +117,7 @@ function IngredientSection() {
 
             {/* WHEN GET DATA -SHOW LIST OF DATA*/}
             {!error && !isLoading && ingredientData?.name && (
-               <List>
+               <List position='relative'>
                   <ListItem>
                      <Typography>
                         {ingredientData?.serving}gr of {ingredientData?.name}
@@ -129,7 +131,22 @@ function IngredientSection() {
                   <Typography>Carb: {ingredientData?.carb}</Typography>
                   <Divider />
                   <Typography>Fat: {ingredientData?.fat}</Typography>
-                  <Divider />
+
+                  {/* images api */}
+
+                  <img
+                     src={images}
+                     height={100}
+                     width={100}
+                     alt='search_image'
+                     align='center'
+                     style={{
+                        borderRadius: '50%',
+                        position: 'absolute',
+                        left: '50%',
+                        transform: 'translate(-50%,0)',
+                     }}
+                  />
                </List>
             )}
          </Box>
