@@ -12,6 +12,7 @@ import { deleteIngredient, addRecipe, deleteAllMeal } from '../store'
 import useIsArray from '../hooks/useIsArray'
 import { useState } from 'react'
 import SnackBar from '../components/SnackBar'
+import { DataGrid } from '@mui/x-data-grid'
 
 function FoodSection() {
    const dispatch = useDispatch()
@@ -108,6 +109,26 @@ function FoodSection() {
       )
    })
 
+   // DATA GRID MEAL
+   const columns = [
+      { field: 'col1', headerName: 'Serving/Name', width: 150 },
+      { field: 'col2', headerName: 'Calories', width: 70 },
+      { field: 'col3', headerName: 'Protein', width: 70 },
+      { field: 'col4', headerName: 'Carb', width: 70 },
+      { field: 'col5', headerName: 'Fat', width: 70 },
+   ]
+
+   const rows = meal.map((meal, index) => {
+      return {
+         id: `${index + 999}`,
+         col1: `${meal.serving}gr of ${meal.name}`,
+         col2: `${meal.calories}`,
+         col3: `${meal.protein}`,
+         col4: `${meal.carb}`,
+         col5: `${meal.fat}`,
+      }
+   })
+
    // JSX
    return (
       <Box
@@ -130,54 +151,35 @@ function FoodSection() {
          </Typography>
 
          {/* LIST OF TOTAL AND MEALS */}
-         <Box
-            padding='0 1rem'
-            display='flex'
-            flexDirection='column'
-            justifyContent='space-between'
-         >
-            <Box>
-               {/* TOTAL */}
-               {useIsArray(
-                  meal,
-                  <Box>
-                     <Stack
-                        direction='row'
-                        alignItems='center'
-                        gap={1}
-                     >
-                        <Typography
-                           variant='h6'
-                           color='primary'
-                        >
-                           Total
-                        </Typography>
-
-                        <Typography>{total?.calories} </Typography>
-                        <Typography variant='overline'>Calories</Typography>
-                        <Typography>{total?.protein} protein</Typography>
-                        <Typography>{total?.carb} carb</Typography>
-                        <Typography>{total?.fat} fat</Typography>
-                     </Stack>
-                  </Box>
-               )}
-            </Box>
+         {meal.length !== 0 ? (
             <Box
-               height='200px'
-               bgcolor='#fff'
-               sx={{ overflowY: 'auto' }}
+               height={350}
+               display='flex'
+               flexDirection='column'
+               justifyContent='space-between'
             >
-               {/* MEALS */}
-               <Box alignSelf='flex-start'>
-                  {useIsArray(meal, renderedMeals)}
+               <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  density='compact'
+                  hideFooter
+               />
+               <Box
+                  display='flex'
+                  alignItems='center'
+                  gap={2}
+               >
+                  <Typography
+                     variant='h6'
+                     color='primary'
+                  >
+                     TOTAL
+                  </Typography>
+                  <Typography>{total?.calories} Calories</Typography>
+                  <Typography>{total?.protein} Protein</Typography>
+                  <Typography>{total?.carb} Carb</Typography>
+                  <Typography>{total?.fat} Fat</Typography>
                </Box>
-            </Box>
-         </Box>
-
-         <Box>
-            {useIsArray(
-               meal,
-               // FORM
                <form
                   onSubmit={handleAddRecipe}
                   style={{ display: 'flex' }}
@@ -189,6 +191,7 @@ function FoodSection() {
                      onChange={handleChange}
                      required
                   />
+
                   <Button
                      variant='contained'
                      type='submit'
@@ -196,10 +199,13 @@ function FoodSection() {
                      Add Recipe
                   </Button>
                </form>
-            )}
-         </Box>
+            </Box>
+         ) : (
+            ''
+         )}
 
          {/* SNACKBAR WHEN ADD RECIPE */}
+
          <SnackBar
             children={'Recipe Added succesfully'}
             open={openSnackbar}

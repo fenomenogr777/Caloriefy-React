@@ -1,11 +1,13 @@
 import { Box, Button, Typography } from '@mui/material'
+import { display } from '@mui/system'
+import { DataGrid } from '@mui/x-data-grid'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import DataGridComponent from '../components/DataGridComponent'
 import useIsArray from '../hooks/useIsArray'
 import { openUserData, deleteUserData, getUserBMI, getUserData } from '../store'
 
 function UserSection() {
-   const [data, setData] = useState('')
    const dispatch = useDispatch()
 
    // GET TOTAL DATA FROM RECIPES
@@ -75,42 +77,42 @@ function UserSection() {
       }
    )
 
-   console.log(userBMI)
-
-   const handleOpen = () => {
+   // HANDLES
+   const handleOpenCaloriedModal = () => {
       dispatch(openUserData())
    }
 
    const handleDeleteUserData = () => {
       dispatch(deleteUserData())
    }
-   console.log(totalNutrition)
-
-   const [open, setOpen] = useState(false)
-
-   const handleClose = () => {
-      setOpen(true)
-      setTimeout(() => {
-         setOpen(false)
-      }, 2000)
-   }
 
    const handleSaveData = () => {
       dispatch(getUserBMI(userData))
    }
 
-   useEffect(() => {
-      const data = JSON.parse(window.localStorage.getItem('USER_DATA_STORE'))
-      console.log(data)
-      dispatch(getUserBMI(data))
-   }, [])
-   console.log(data)
+   // DATA FOR DATA GRID
+   const columns = [
+      { field: 'col1', headerName: 'Calories', width: 100 },
+      { field: 'col2', headerName: 'Protein', width: 100 },
+      { field: 'col3', headerName: 'Carb', width: 100 },
+      { field: 'col4', headerName: 'Fat', width: 100 },
+   ]
 
-   useEffect(() => {
-      // if (!userBMI?.name) return
-      window.localStorage.setItem('USER_DATA_STORE', JSON.stringify(userBMI))
-   }, [userBMI])
+   const rows = [
+      {
+         id: 0,
+         col1: `${userData?.calories - totalNutrition.calories}/${
+            userData?.calories
+         }`,
+         col2: `${userData?.protein - totalNutrition.protein}/${
+            userData?.protein
+         }`,
+         col3: `${userData?.carb - totalNutrition.carb}/${userData?.carb}`,
+         col4: `${userData?.fat - totalNutrition.fat}/${userData?.fat}`,
+      },
+   ]
 
+   // JSX
    return (
       <Box
          height='320px'
@@ -118,7 +120,8 @@ function UserSection() {
          borderRadius='11px'
          display='flex'
          flexDirection='column'
-         gap={5}
+         position='relative'
+         // gap={5}
       >
          <Box>
             <Typography
@@ -132,70 +135,60 @@ function UserSection() {
             </Typography>
          </Box>
 
-         <Box alignSelf='center'>
-            {true ? (
-               <Box
-                  display='flex'
-                  flexDirection='column'
-                  alignItems='space-between'
+         {/* DATAGRID BOX */}
+         {userData.length !== 0 ? (
+            <Box
+               height='550px'
+               display='flex'
+               flexDirection='column'
+               justifyContent='space-between'
+            >
+               <Typography
+                  textTransform='capitalize'
+                  padding={1}
+                  variant='h6'
+                  color='rgba(0, 0, 0, 0.87)'
                >
-                  <Box>
-                     <Typography
-                        variant='h6'
-                        textTransform='capitalize'
-                     >
-                        Hello {userBMI?.name} ,
-                     </Typography>
-                     <Typography>
-                        {Math.round(
-                           data.calories ??
-                              userBMI?.calories - totalNutrition.calories
-                        )}
-                        /{userBMI?.calories} Calories
-                     </Typography>
-                     <Typography>
-                        {Math.round(userBMI?.protein - totalNutrition.protein)}/
-                        {userBMI?.protein} Protein
-                     </Typography>
-                     <Typography>
-                        {Math.round(userBMI?.carb - totalNutrition.carb)}/
-                        {userBMI?.carb} Carb
-                     </Typography>
-                     <Typography>
-                        {Math.round(userBMI?.fat - totalNutrition.fat)}/
-                        {userBMI?.fat} Fat
-                     </Typography>
-                  </Box>
-                  {/* IF USERBMI EMTY = SAVE ELSE DELETE BUTTON */}
-                  {userBMI?.name ? (
-                     <Button
-                        variant='contained'
-                        onClick={handleSaveData}
-                     >
-                        Save Data
-                     </Button>
-                  ) : (
-                     <Button
-                        onClick={handleDeleteUserData}
-                        variant='contained'
-                        color='error'
-                        size='small'
-                     >
-                        Delete Data
-                     </Button>
-                  )}
-                  {/* SETUP CALORIES */}
-               </Box>
-            ) : (
-               // <Button
-               //    onClick={handleOpen}
-               //    variant='contained'
-               // >
-               //    Set up Your calories data
-               // </Button>
-               ''
-            )}
-         </Box>
+                  Hello {userData?.name},
+               </Typography>
+               <DataGrid
+                  rows={rows}
+                  columns={columns}
+                  density='compact'
+                  hideFooter
+               />
+               <Button
+                  variant='contained'
+                  color='error'
+                  size='small'
+                  onClick={handleDeleteUserData}
+                  sx={{ alignSelf: 'center' }}
+               >
+                  <Typography fontWeight='500'>Delete Data</Typography>
+               </Button>
+            </Box>
+         ) : (
+            ''
+         )}
+
+         {/* SETUP BUTTON */}
+         {userData.length === 0 ? (
+            <Button
+               onClick={handleOpenCaloriedModal}
+               variant='contained'
+               sx={{
+                  alignSelf: 'center',
+                  position: 'absolute',
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%,-50%)',
+               }}
+            >
+               Set Up Data
+            </Button>
+         ) : (
+            ''
+         )}
       </Box>
    )
 }

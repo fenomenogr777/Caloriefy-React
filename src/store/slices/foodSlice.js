@@ -10,16 +10,16 @@ const foodSlice = createSlice({
          error: null,
       },
       meal: [
-         // {
-         //    calories: 51,
-         //    carb: 5,
-         //    fat: 2,
-         //    id: 'gqFLy85atdpdcHfvgy_JI',
-         //    name: 'milk',
-         //    protein: 4,
-         //    serving: 100,
-         //    servingOriginal: 100,
-         // },
+         {
+            calories: 51,
+            carb: 5,
+            fat: 2,
+            id: 'gqFLy85atdpdcHfvgy_JI',
+            name: 'milk',
+            protein: 4,
+            serving: 100,
+            servingOriginal: 100,
+         },
          // {
          //    calories: 51,
          //    carb: 5,
