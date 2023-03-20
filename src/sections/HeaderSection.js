@@ -6,7 +6,11 @@ import CalorieModal from '../components/CalorieModal'
 function HeaderSection() {
    return (
       <Box>
-         <Stack direction="row" justifyContent="space-between" alignItems="center">
+         <Stack
+            direction='row'
+            justifyContent='space-between'
+            alignItems='center'
+         >
             <Logo />
             <SearchBar />
             <CalorieModal />

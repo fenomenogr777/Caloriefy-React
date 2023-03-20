@@ -1,10 +1,17 @@
-import { Box, Button, Typography } from '@mui/material'
-import { display } from '@mui/system'
+import {
+   Box,
+   Button,
+   Table,
+   TableBody,
+   TableCell,
+   TableContainer,
+   TableHead,
+   TableRow,
+   Typography,
+} from '@mui/material'
 import { DataGrid } from '@mui/x-data-grid'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import DataGridComponent from '../components/DataGridComponent'
-import useIsArray from '../hooks/useIsArray'
 import { openUserData, deleteUserData, getUserBMI, getUserData } from '../store'
 
 function UserSection() {
@@ -41,8 +48,6 @@ function UserSection() {
                   data.activity *
                   data.yourGoal
             )
-            // dispatch(getUserBMI('gfdgd'))
-
             return {
                userBMI,
                userData: {
@@ -90,28 +95,6 @@ function UserSection() {
       dispatch(getUserBMI(userData))
    }
 
-   // DATA FOR DATA GRID
-   const columns = [
-      { field: 'col1', headerName: 'Calories', width: 100 },
-      { field: 'col2', headerName: 'Protein', width: 100 },
-      { field: 'col3', headerName: 'Carb', width: 100 },
-      { field: 'col4', headerName: 'Fat', width: 100 },
-   ]
-
-   const rows = [
-      {
-         id: 0,
-         col1: `${userData?.calories - totalNutrition.calories}/${
-            userData?.calories
-         }`,
-         col2: `${userData?.protein - totalNutrition.protein}/${
-            userData?.protein
-         }`,
-         col3: `${userData?.carb - totalNutrition.carb}/${userData?.carb}`,
-         col4: `${userData?.fat - totalNutrition.fat}/${userData?.fat}`,
-      },
-   ]
-
    // JSX
    return (
       <Box
@@ -136,12 +119,11 @@ function UserSection() {
          </Box>
 
          {/* DATAGRID BOX */}
-         {userData.length !== 0 ? (
+         {userData.length !== 0 && (
             <Box
                height='550px'
                display='flex'
                flexDirection='column'
-               justifyContent='space-between'
             >
                <Typography
                   textTransform='capitalize'
@@ -151,24 +133,75 @@ function UserSection() {
                >
                   Hello {userData?.name},
                </Typography>
-               <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  density='compact'
-                  hideFooter
-               />
-               <Button
-                  variant='contained'
-                  color='error'
-                  size='small'
-                  onClick={handleDeleteUserData}
-                  sx={{ alignSelf: 'center' }}
-               >
-                  <Typography fontWeight='500'>Delete Data</Typography>
-               </Button>
+
+               <TableContainer>
+                  <Table>
+                     <TableHead>
+                        <TableRow>
+                           <TableCell >Calories</TableCell>
+                           <TableCell>Protein</TableCell>
+                           <TableCell>Carb</TableCell>
+                           <TableCell>Fat</TableCell>
+                        </TableRow>
+                     </TableHead>
+                     <TableBody>
+                        <TableRow>
+                           <TableCell>
+                              {userData?.calories - totalNutrition.calories}/
+                              <Typography
+                                 color='primary'
+                                 variant='span'
+                                 fontWeight={600}
+                              >
+                                 {userData?.calories}
+                              </Typography>
+                           </TableCell>
+                           <TableCell>
+                              {userData?.protein - totalNutrition.protein}/
+                              <Typography
+                                 color='primary'
+                                 variant='span'
+                                 fontWeight={600}
+                              >
+                                 {userData?.protein}
+                              </Typography>
+                           </TableCell>
+                           <TableCell>
+                              {userData?.carb - totalNutrition.carb}/
+                              <Typography
+                                 color='primary'
+                                 variant='span'
+                                 fontWeight={600}
+                              >
+                                 {userData?.carb}
+                              </Typography>
+                           </TableCell>
+                           <TableCell>
+                              {userData?.fat - totalNutrition.fat}/
+                              <Typography
+                                 color='primary'
+                                 variant='span'
+                                 fontWeight={600}
+                              >
+                                 {userData?.fat}
+                              </Typography>
+                           </TableCell>
+                        </TableRow>
+                     </TableBody>
+                  </Table>
+               </TableContainer>
             </Box>
-         ) : (
-            ''
+         )}
+         {userData.length !== 0 && (
+            <Button
+               variant='contained'
+               color='error'
+               size='small'
+               onClick={handleDeleteUserData}
+               sx={{ alignSelf: 'center' }}
+            >
+               <Typography fontWeight='500'>Delete Data</Typography>
+            </Button>
          )}
 
          {/* SETUP BUTTON */}

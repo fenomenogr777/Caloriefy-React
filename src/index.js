@@ -11,6 +11,9 @@ const root = ReactDOM.createRoot(el)
 
 // MATERIAL UI CUSTOM THEME
 const theme = createTheme({
+   breakpoints: {
+      values: { lg: 1200, md: 1070, sm: 600, xl: 1536, xs: 0 },
+   },
    palette: {
       secondary: {
          main: '#ccf381',
@@ -22,6 +25,7 @@ const theme = createTheme({
       },
    },
 })
+console.log(theme)
 
 root.render(
    <Provider store={store}>

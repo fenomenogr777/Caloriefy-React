@@ -36,7 +36,7 @@ function App() {
                      {/* HEADER SECTION (1) */}
                      <Grid
                         item
-                        md={12}
+                        xs={12}
                      >
                         <HeaderSection />
                      </Grid>
@@ -45,6 +45,7 @@ function App() {
                      <Grid
                         item
                         md={5}
+                        xs={12}
                      >
                         <IngredientSection />
                      </Grid>
@@ -53,12 +54,14 @@ function App() {
                      <Grid
                         item
                         md={7}
+                        xs={12}
                      >
                         <FoodSection />
                      </Grid>
                      <Grid
                         item
                         md={7}
+                        xs={12}
                      >
                         {/* RECIPE SECTION (4) */}
                         <RecipeSection />
@@ -66,6 +69,7 @@ function App() {
                      <Grid
                         item
                         md={5}
+                        xs={12}
                      >
                         {/* USER SECTION (5) */}
                         <UserSection />

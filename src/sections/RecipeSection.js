@@ -35,6 +35,13 @@ function RecipeSection() {
    }
 
    // HANDLES
+   // const handleCloseIngredientList = e => {
+   //    if (!e.target.classList.contains('.ingredient-list')) {
+   //       setOpen(false)
+   //    }
+   //    console.log(1)
+   // }
+
    const handleDeleteRecipe = id => {
       dispatch(deleteRecipe(id))
    }
@@ -45,7 +52,6 @@ function RecipeSection() {
    const recipes = useSelector(({ storeFood: { recipes } }) => {
       return recipes
    })
-
 
    // LOAD RECIPES FROM LOCAL STORAGE
    useEffect(() => {
@@ -86,7 +92,10 @@ function RecipeSection() {
             {recipes.length !== 0 && (
                <Box>
                   <TableContainer sx={{ maxHeight: '220px' }}>
-                     <Table size='small' stickyHeader>
+                     <Table
+                        size='small'
+                        stickyHeader
+                     >
                         <TableHead>
                            <TableRow>
                               <TableCell>NAME</TableCell>
@@ -112,7 +121,12 @@ function RecipeSection() {
                                     <TableCell>{recipe.fat}</TableCell>
                                     <TableCell position='relative'>
                                        <IconButton
-                                          color='primary'
+                                          className='ingredient-list'
+                                          {...(open === recipe.id
+                                             ? {
+                                                  color: 'secondary',
+                                               }
+                                             : { color: 'primary' })}
                                           onClick={() =>
                                              showIngredientsById(recipe.id)
                                           }
@@ -123,7 +137,7 @@ function RecipeSection() {
                                        {open === recipe.id && (
                                           <Box
                                              position='absolute'
-                                            zIndex={999}
+                                             zIndex={999}
                                           >
                                              <Paper
                                                 sx={{
@@ -131,12 +145,13 @@ function RecipeSection() {
                                                    padding: '4px 8px',
                                                 }}
                                              >
-                                                <Typography>
+                                                <Typography variant='h6'>
                                                    {recipe.name}
                                                 </Typography>
+
                                                 {recipe.ingredients.map(ing => {
                                                    return (
-                                                      <Box>
+                                                      <Box key={recipe.id}>
                                                          <Typography>
                                                             {ing}
                                                          </Typography>
