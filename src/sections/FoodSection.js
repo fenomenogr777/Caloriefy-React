@@ -2,17 +2,20 @@ import {
    Box,
    Button,
    IconButton,
-   Stack,
+   Table,
+   TableBody,
+   TableCell,
+   TableContainer,
+   TableHead,
+   TableRow,
    TextField,
    Typography,
 } from '@mui/material'
-import ClearIcon from '@mui/icons-material/Clear'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteIngredient, addRecipe, deleteAllMeal } from '../store'
-import useIsArray from '../hooks/useIsArray'
 import { useState } from 'react'
 import SnackBar from '../components/SnackBar'
-import { DataGrid } from '@mui/x-data-grid'
+import CancelIcon from '@mui/icons-material/Cancel'
 
 function FoodSection() {
    const dispatch = useDispatch()
@@ -28,7 +31,8 @@ function FoodSection() {
    const handleCloseSnackbar = () => {
       setOpenSnackbar(false)
    }
-   const handleDeleteIngredient = id => {
+   const handleDeleteIngredient = e => {
+      const id = e.target.closest('.MuiTableRow-root').id
       dispatch(deleteIngredient(id))
    }
    // ADDS RECIPE
@@ -42,91 +46,37 @@ function FoodSection() {
             protein: total.protein,
             carb: total.carb,
             fat: total.fat,
-            ingredients: meal.map(ing => `${ing.name}-${ing.serving}gr`),
+            ingredients: meal.map((ing,index) => `${index+1}: ${ing.name} ${ing.serving}gr`),
          })
       )
       setOpenSnackbar(true)
-
-      console.log(...recipes)
-
       dispatch(deleteAllMeal())
       setRecipeName('')
    }
 
    // IMPORT MEAL/TOTAL/RECIPES
-   const { meal, total, recipes } = useSelector(
-      ({ storeFood: { meal, recipes } }) => {
-         // if meal empty return empty arrays
-         if (meal.length === 0) return { meal: [], total: [] }
+   const { meal, total } = useSelector(({ storeFood: { meal } }) => {
+      // if meal empty return empty arrays
+      if (meal.length === 0) return { meal: [], total: [] }
 
-         let storeFood = {
-            recipes,
-            meal,
-            total: {
-               calories: meal.reduce((total, meal) => {
-                  return Math.round(total + meal?.calories)
-               }, 0),
-               protein: meal.reduce((total, meal) => {
-                  return Math.round(total + meal?.protein)
-               }, 0),
-               carb: meal.reduce((total, meal) => {
-                  return Math.round(total + meal?.carb)
-               }, 0),
-               fat: meal.reduce((total, meal) => {
-                  return Math.round(total + meal?.fat)
-               }, 0),
-            },
-         }
-         return storeFood
+      let storeFood = {
+         meal,
+         total: {
+            calories: meal.reduce((total, meal) => {
+               return Math.round(total + meal?.calories)
+            }, 0),
+            protein: meal.reduce((total, meal) => {
+               return Math.round(total + meal?.protein)
+            }, 0),
+            carb: meal.reduce((total, meal) => {
+               return Math.round(total + meal?.carb)
+            }, 0),
+            fat: meal.reduce((total, meal) => {
+               return Math.round(total + meal?.fat)
+            }, 0),
+         },
       }
-   )
-
-   // SHOW THE LIST OF MEALS ON FOODSECTION
-   const renderedMeals = meal?.map(meal => {
-      return (
-         <Box key={meal.id}>
-            <Stack
-               direction='row'
-               alignItems='center'
-               gap={1}
-            >
-               <Typography
-                  variant='h6'
-                  textTransform='capitalize'
-               >
-                  {meal.name}
-               </Typography>
-               <Typography>{meal.serving}gr</Typography>
-               <Typography variant='overline'>({meal.calories}C</Typography>
-               <Typography variant='overline'>{meal.protein}P</Typography>
-               <Typography variant='overline'>{meal.carb}C</Typography>
-               <Typography variant='overline'>{meal.fat}F)</Typography>
-               <IconButton onClick={() => handleDeleteIngredient(meal.id)}>
-                  <ClearIcon color='error' />
-               </IconButton>
-            </Stack>
-         </Box>
-      )
-   })
-
-   // DATA GRID MEAL
-   const columns = [
-      { field: 'col1', headerName: 'Serving/Name', width: 150 },
-      { field: 'col2', headerName: 'Calories', width: 70 },
-      { field: 'col3', headerName: 'Protein', width: 70 },
-      { field: 'col4', headerName: 'Carb', width: 70 },
-      { field: 'col5', headerName: 'Fat', width: 70 },
-   ]
-
-   const rows = meal.map((meal, index) => {
-      return {
-         id: `${index + 999}`,
-         col1: `${meal.serving}gr of ${meal.name}`,
-         col2: `${meal.calories}`,
-         col3: `${meal.protein}`,
-         col4: `${meal.carb}`,
-         col5: `${meal.fat}`,
-      }
+      return storeFood
    })
 
    // JSX
@@ -158,59 +108,102 @@ function FoodSection() {
                flexDirection='column'
                justifyContent='space-between'
             >
-               <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  density='compact'
-                  hideFooter
-               />
-               <Box
-                  display='flex'
-                  alignItems='center'
-                  gap={2}
-               >
-                  <Typography
-                     variant='h6'
-                     color='primary'
-                  >
-                     TOTAL
-                  </Typography>
-                  <Typography>{total?.calories} Calories</Typography>
-                  <Typography>{total?.protein} Protein</Typography>
-                  <Typography>{total?.carb} Carb</Typography>
-                  <Typography>{total?.fat} Fat</Typography>
-               </Box>
-               <form
-                  onSubmit={handleAddRecipe}
-                  style={{ display: 'flex' }}
-               >
-                  <TextField
+               <TableContainer sx={{ maxHeight: '220px' }}>
+                  <Table
                      size='small'
-                     label='Recipe Name'
-                     value={recipeName}
-                     onChange={handleChange}
-                     required
-                  />
-
-                  <Button
-                     variant='contained'
-                     type='submit'
+                     stickyHeader
                   >
-                     Add Recipe
-                  </Button>
-               </form>
+                     <TableHead>
+                        <TableRow>
+                           <TableCell>Serving/Name</TableCell>
+                           <TableCell>Calories</TableCell>
+                           <TableCell>Protein</TableCell>
+                           <TableCell>Carb</TableCell>
+                           <TableCell>Fat</TableCell>
+                           <TableCell></TableCell>
+                        </TableRow>
+                     </TableHead>
+                     <TableBody>
+                        {/* MEALS TABLE */}
+                        {meal.map(meal => {
+                           return (
+                              <TableRow
+                                 key={meal.id}
+                                 id={meal.id}
+                              >
+                                 <TableCell>
+                                    {meal.serving}gr of {meal.name}
+                                 </TableCell>
+                                 <TableCell>{meal.calories}</TableCell>
+                                 <TableCell>{meal.protein}</TableCell>
+                                 <TableCell>{meal.carb}</TableCell>
+                                 <TableCell>{meal.fat}</TableCell>
+                                 <TableCell>
+                                    {
+                                       <IconButton
+                                          onClick={handleDeleteIngredient}
+                                          color='error'
+                                       >
+                                          <CancelIcon />
+                                       </IconButton>
+                                    }
+                                 </TableCell>
+                              </TableRow>
+                           )
+                        })}
+                     </TableBody>
+                  </Table>
+               </TableContainer>
+
+               {/* TOTAL TABLE */}
+               <Box>
+                  <TableContainer>
+                     <Table size='small'>
+                        <TableHead>
+                           <TableRow>
+                              <TableCell>TOTAL</TableCell>
+                              <TableCell>{total?.calories}</TableCell>
+                              <TableCell>{total?.protein}</TableCell>
+                              <TableCell>{total?.carb}</TableCell>
+                              <TableCell>{total?.fat}</TableCell>
+                              <TableCell></TableCell>
+                           </TableRow>
+                        </TableHead>
+                     </Table>
+                  </TableContainer>
+
+                  {/* FORM */}
+                  <form
+                     onSubmit={handleAddRecipe}
+                     style={{ display: 'flex' }}
+                  >
+                     <TextField
+                        size='small'
+                        label='Recipe Name'
+                        value={recipeName}
+                        onChange={handleChange}
+                        required
+                     />
+
+                     <Button
+                        variant='contained'
+                        type='submit'
+                     >
+                        Add Recipe
+                     </Button>
+                  </form>
+               </Box>
             </Box>
          ) : (
             ''
          )}
 
          {/* SNACKBAR WHEN ADD RECIPE */}
-
          <SnackBar
             children={'Recipe Added succesfully'}
             open={openSnackbar}
             onClose={handleCloseSnackbar}
-            autoHideTime={2000}
+            autoHideTime={3000}
          />
       </Box>
    )

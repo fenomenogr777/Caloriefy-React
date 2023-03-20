@@ -4,10 +4,13 @@ import {
    Box,
    Button,
    CircularProgress,
-   Divider,
-   ImageList,
-   List,
-   ListItem,
+   Link,
+   Table,
+   TableBody,
+   TableCell,
+   TableContainer,
+   TableHead,
+   TableRow,
    TextField,
    Typography,
 } from '@mui/material'
@@ -31,7 +34,9 @@ function IngredientSection() {
       }) => {
          // changes ingredient data based on input value
          const ingredientData = {
-            name: data?.name,
+            name: `${data?.name?.slice(0, 1).toUpperCase()}${data?.name
+               ?.slice(1)
+               .toLowerCase()}`,
             id: data?.id,
             calories: Math.round(data?.calories * value),
             protein: Math.round(data?.protein * value),
@@ -48,7 +53,6 @@ function IngredientSection() {
    const handleChange = e => {
       setValue(e.target.value)
    }
-
    const handleSubmit = e => {
       e.preventDefault()
       // add ingredient to meals array
@@ -116,38 +120,56 @@ function IngredientSection() {
             )}
 
             {/* WHEN GET DATA -SHOW LIST OF DATA*/}
-            {!error && !isLoading && ingredientData?.name && (
-               <List position='relative'>
-                  <ListItem>
-                     <Typography>
-                        {ingredientData?.serving}gr of {ingredientData?.name}
-                     </Typography>
-                  </ListItem>
-                  <Divider color='purple' />
-                  <Typography>Calories: {ingredientData?.calories}</Typography>
-                  <Divider />
-                  <Typography>Protein: {ingredientData?.protein}</Typography>
-                  <Divider />
-                  <Typography>Carb: {ingredientData?.carb}</Typography>
-                  <Divider />
-                  <Typography>Fat: {ingredientData?.fat}</Typography>
+            {!error && !isLoading && ingredientData?.id && (
+               <Box position='relative'>
+                  {/* TABLE DATA */}
+                  <TableContainer>
+                     <Table>
+                        <TableHead>
+                           <TableRow>
+                              <TableCell>Serving/Name</TableCell>
+                              <TableCell>Calories</TableCell>
+                              <TableCell>Protein</TableCell>
+                              <TableCell>Carb</TableCell>
+                              <TableCell>Fat</TableCell>
+                           </TableRow>
+                        </TableHead>
+                        <TableBody>
+                           <TableRow>
+                              <TableCell>
+                                 {ingredientData?.serving}gr of {''}
+                                 {ingredientData?.name}
+                              </TableCell>
+                              <TableCell>{ingredientData?.calories}</TableCell>
+                              <TableCell>{ingredientData?.protein}</TableCell>
+                              <TableCell>{ingredientData?.carb}</TableCell>
+                              <TableCell>{ingredientData?.fat}</TableCell>
+                           </TableRow>
+                        </TableBody>
+                     </Table>
+                  </TableContainer>
 
-                  {/* images api */}
-
-                  <img
-                     src={images}
-                     height={100}
-                     width={100}
-                     alt='search_image'
-                     align='center'
-                     style={{
-                        borderRadius: '50%',
-                        position: 'absolute',
-                        left: '50%',
-                        transform: 'translate(-50%,0)',
-                     }}
-                  />
-               </List>
+                  {/* IMAGES FROM API BASES ON SEARCH QUERY */}
+                  <Link
+                     target='_blank'
+                     href={images}
+                  >
+                     <img
+                        src={images}
+                        height={100}
+                        width={100}
+                        alt='search_image'
+                        align='center'
+                        style={{
+                           borderRadius: '50%',
+                           position: 'absolute',
+                           left: '50%',
+                           transform: 'translate(-50%,0)',
+                           border: '3px solid rgb(72, 49, 212)',
+                        }}
+                     />
+                  </Link>
+               </Box>
             )}
          </Box>
 
@@ -165,6 +187,7 @@ function IngredientSection() {
                   onChange={handleChange}
                />
                <Button
+                  size='small'
                   variant='contained'
                   type='submit'
                >

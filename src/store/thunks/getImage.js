@@ -1,10 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { IMAGES_API_KEY } from '../../config'
+import { IMAGES_API_URL } from '../../config'
 
 const getImage = createAsyncThunk('get/image', async query => {
-   const res = await axios.get(`https://api.unsplash.com/search/photos`, {
+   const res = await axios.get(IMAGES_API_URL, {
       headers: {
-         Authorization: 'Client-ID xbE_Gx0MpiswdS41DqhXcOrVHhMz5-8ZtrxV21lBIyc',
+         Authorization: IMAGES_API_KEY,
       },
       params: { query: query },
    })
