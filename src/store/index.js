@@ -3,7 +3,7 @@ import {
    formReducer,
    getUserData,
    openUserData,
-   deleteUserData,
+   deleteUserBMI,
    getUserBMI,
 } from './slices/formSlice'
 
@@ -49,7 +49,7 @@ export {
    deleteAllMeal,
    getUserData,
    openUserData,
-   deleteUserData,
+   deleteUserBMI,
    addRecipesLocalStorage,
    getUserBMI,
 }

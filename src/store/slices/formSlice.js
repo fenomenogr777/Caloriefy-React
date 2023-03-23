@@ -14,8 +14,8 @@ const formSlice = createSlice({
       openUserData(state, action) {
          state.userIsOpen = !state.userIsOpen
       },
-      deleteUserData(state, action) {
-         state.userData = []
+      deleteUserBMI(state, action) {
+         state.userBMI = []
       },
       getUserBMI(state, action) {
          state.userBMI = action.payload
@@ -23,7 +23,7 @@ const formSlice = createSlice({
    },
 })
 
-export const { getUserData, openUserData, deleteUserData, getUserBMI } =
+export const { getUserData, openUserData, deleteUserBMI, getUserBMI } =
    formSlice.actions
 
 export const formReducer = formSlice.reducer

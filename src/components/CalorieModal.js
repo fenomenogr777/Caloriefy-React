@@ -20,7 +20,8 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import ClearIcon from '@mui/icons-material/Clear'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openUserData, getUserData } from '../store'
+import { openUserData, getUserData, getUserBMI } from '../store'
+import UserdataBMI from './UserdataBMI'
 
 function CalorieModal() {
    const dispatch = useDispatch()
@@ -69,7 +70,11 @@ function CalorieModal() {
    const handleSubmitForm = e => {
       e.preventDefault()
       dispatch(getUserData([form]))
+      dispatch(getUserBMI(UserdataBMI(form)))
       dispatch(openUserData())
+      console.log(111)
+
+      console.log(222)
    }
 
    return (

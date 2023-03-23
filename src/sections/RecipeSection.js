@@ -20,6 +20,7 @@ import {
 import { useEffect, useState } from 'react'
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu'
 import CancelIcon from '@mui/icons-material/Cancel'
+import { nanoid } from '@reduxjs/toolkit'
 
 function RecipeSection() {
    const dispatch = useDispatch()
@@ -151,7 +152,7 @@ function RecipeSection() {
 
                                                 {recipe.ingredients.map(ing => {
                                                    return (
-                                                      <Box key={recipe.id}>
+                                                      <Box key={nanoid()}>
                                                          <Typography>
                                                             {ing}
                                                          </Typography>
@@ -181,15 +182,17 @@ function RecipeSection() {
                </Box>
             )}
          </Box>
-         <Button
-            size='small'
-            variant='contained'
-            color='error'
-            onClick={handleDeleteAllRecipes}
-            sx={{ alignSelf: 'center' }}
-         >
-            <Typography fontWeight='500'>Delete All</Typography>
-         </Button>
+         {recipes.length !== 0 && (
+            <Button
+               size='small'
+               variant='contained'
+               color='error'
+               onClick={handleDeleteAllRecipes}
+               sx={{ alignSelf: 'center' }}
+            >
+               <Typography fontWeight='500'>Delete All</Typography>
+            </Button>
+         )}
       </Box>
    )
 }

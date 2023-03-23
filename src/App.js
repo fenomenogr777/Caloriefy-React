@@ -17,7 +17,15 @@ function App() {
             backgroundImage: 'linear-gradient(to right bottom,#8776e7,#4831d4)',
          }}
       >
-         <Container maxWidth='lg'>
+         <Container
+            maxWidth='lg'
+            sx={{
+               backgroundColor: 'primary.light',
+               padding: '1rem',
+               borderRadius: '11px',
+               boxShadow: `0px 10px 20px #160f40`,
+            }}
+         >
             <Box
                display='flex'
                flexDirection='column'
@@ -27,9 +35,6 @@ function App() {
                <Box>
                   <DarkMode />
                   <Grid
-                     bgcolor='rgb(218, 214, 246)'
-                     borderRadius='11px'
-                     boxShadow='0px 10px 20px black'
                      spacing={2}
                      container
                   >

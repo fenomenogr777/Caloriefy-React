@@ -9,13 +9,14 @@ import {
    TableRow,
    Typography,
 } from '@mui/material'
-import { DataGrid } from '@mui/x-data-grid'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { openUserData, deleteUserData, getUserBMI, getUserData } from '../store'
+import { openUserData, deleteUserBMI, getUserBMI, getUserData } from '../store'
+import UserdataBMI from '../components/UserdataBMI'
 
 function UserSection() {
    const dispatch = useDispatch()
+   const store = useSelector(state => state)
 
    // GET TOTAL DATA FROM RECIPES
    const totalNutrition = useSelector(({ storeFood: { recipes } }) => {
@@ -32,68 +33,33 @@ function UserSection() {
       )
    })
 
-   // GET USERDATA
-   const { userData, userBMI } = useSelector(
-      ({ storeForm: { userData, userBMI } }) => {
-         // GUARD RETURN []
-         if (userData.length === 0 && userBMI.length === 0)
-            return { userData: [], userBMI: [] }
+   const data1 = useSelector(({ storeForm: { userBMI } }) => userBMI)
+   const userBMI = Object.assign({}, data1)
+   console.log(userBMI)
 
-         const data = userData[0]
+   useEffect(() => {
+      if (Object.keys(userBMI).length === 0) return
+      // guard if onbject is empty dont re assign value
+      const data = userBMI || []
+      console.log(1111111111111)
+      window.localStorage.setItem('USER_DATA_STORE', JSON.stringify(data))
+   }, [userBMI])
 
-         // MALE CALCULATION
-         if (data.gender === 'male') {
-            let bmi = Math.round(
-               (66 + 13.7 * +data.weight + 5 * +data.height - 6.8 * +data.age) *
-                  data.activity *
-                  data.yourGoal
-            )
-            return {
-               userBMI,
-               userData: {
-                  name: data.name,
-                  calories: bmi,
-                  protein: Math.round((bmi * 22) / 100 / 4),
-                  carb: Math.round((bmi * 55) / 100 / 4),
-                  fat: Math.round((bmi * 23) / 100 / 9),
-               },
-            }
-         }
-
-         // FEMALE CALCULATION
-         if (data.gender === 'female') {
-            let bmi = Math.round(
-               (655 +
-                  9.6 * +data.weight +
-                  1.8 * +data.height -
-                  4.7 * +data.age) *
-                  data.activity *
-                  data.yourGoal
-            )
-
-            return {
-               name: data.name,
-               calories: bmi,
-               protein: Math.round((bmi * 22) / 100 / 4),
-               carb: Math.round((bmi * 55) / 100 / 4),
-               fat: Math.round((bmi * 23) / 100 / 9),
-            }
-         }
-      }
-   )
+   useEffect(() => {
+      const data = JSON.parse(window.localStorage.getItem('USER_DATA_STORE'))
+      dispatch(getUserBMI(data))
+   }, [dispatch])
 
    // HANDLES
    const handleOpenCaloriedModal = () => {
       dispatch(openUserData())
    }
 
-   const handleDeleteUserData = () => {
-      dispatch(deleteUserData())
+   const handleDeleteUserBMI = () => {
+      dispatch(deleteUserBMI())
    }
 
-   const handleSaveData = () => {
-      dispatch(getUserBMI(userData))
-   }
+   console.log(store)
 
    // JSX
    return (
@@ -119,93 +85,96 @@ function UserSection() {
          </Box>
 
          {/* DATAGRID BOX */}
-         {userData.length !== 0 && (
-            <Box
-               height='550px'
-               display='flex'
-               flexDirection='column'
-            >
-               <Typography
-                  textTransform='capitalize'
-                  padding={1}
-                  variant='h6'
-                  color='rgba(0, 0, 0, 0.87)'
-               >
-                  Hello {userData?.name},
-               </Typography>
 
-               <TableContainer>
-                  <Table>
-                     <TableHead>
-                        <TableRow>
-                           <TableCell >Calories</TableCell>
-                           <TableCell>Protein</TableCell>
-                           <TableCell>Carb</TableCell>
-                           <TableCell>Fat</TableCell>
-                        </TableRow>
-                     </TableHead>
-                     <TableBody>
-                        <TableRow>
-                           <TableCell>
-                              {userData?.calories - totalNutrition.calories}/
-                              <Typography
-                                 color='primary'
-                                 variant='span'
-                                 fontWeight={600}
-                              >
-                                 {userData?.calories}
-                              </Typography>
-                           </TableCell>
-                           <TableCell>
-                              {userData?.protein - totalNutrition.protein}/
-                              <Typography
-                                 color='primary'
-                                 variant='span'
-                                 fontWeight={600}
-                              >
-                                 {userData?.protein}
-                              </Typography>
-                           </TableCell>
-                           <TableCell>
-                              {userData?.carb - totalNutrition.carb}/
-                              <Typography
-                                 color='primary'
-                                 variant='span'
-                                 fontWeight={600}
-                              >
-                                 {userData?.carb}
-                              </Typography>
-                           </TableCell>
-                           <TableCell>
-                              {userData?.fat - totalNutrition.fat}/
-                              <Typography
-                                 color='primary'
-                                 variant='span'
-                                 fontWeight={600}
-                              >
-                                 {userData?.fat}
-                              </Typography>
-                           </TableCell>
-                        </TableRow>
-                     </TableBody>
-                  </Table>
-               </TableContainer>
-            </Box>
-         )}
-         {userData.length !== 0 && (
+         <Box
+            height='550px'
+            display='flex'
+            flexDirection='column'
+         >
+            {userBMI.calories && (
+               <Box>
+                  <Typography
+                     textTransform='capitalize'
+                     padding={1}
+                     variant='h6'
+                     color='rgba(0, 0, 0, 0.87)'
+                  >
+                     Hello {userBMI?.name},
+                  </Typography>
+                  <TableContainer>
+                     <Table>
+                        <TableHead>
+                           <TableRow>
+                              <TableCell>Calories</TableCell>
+                              <TableCell>Protein</TableCell>
+                              <TableCell>Carb</TableCell>
+                              <TableCell>Fat</TableCell>
+                           </TableRow>
+                        </TableHead>
+                        <TableBody>
+                           <TableRow>
+                              <TableCell>
+                                 {userBMI?.calories - totalNutrition.calories}/
+                                 <Typography
+                                    color='primary'
+                                    variant='span'
+                                    fontWeight={600}
+                                 >
+                                    {userBMI?.calories}
+                                 </Typography>
+                              </TableCell>
+                              <TableCell>
+                                 {userBMI?.protein - totalNutrition.protein}/
+                                 <Typography
+                                    color='primary'
+                                    variant='span'
+                                    fontWeight={600}
+                                 >
+                                    {userBMI?.protein}
+                                 </Typography>
+                              </TableCell>
+                              <TableCell>
+                                 {userBMI?.carb - totalNutrition.carb}/
+                                 <Typography
+                                    color='primary'
+                                    variant='span'
+                                    fontWeight={600}
+                                 >
+                                    {userBMI?.carb}
+                                 </Typography>
+                              </TableCell>
+                              <TableCell>
+                                 {userBMI?.fat - totalNutrition.fat}/
+                                 <Typography
+                                    color='primary'
+                                    variant='span'
+                                    fontWeight={600}
+                                 >
+                                    {userBMI?.fat}
+                                 </Typography>
+                              </TableCell>
+                           </TableRow>
+                        </TableBody>
+                     </Table>
+                  </TableContainer>
+               </Box>
+            )}
+         </Box>
+
+         {userBMI?.length !== 0 && (
             <Button
                variant='contained'
-               color='error'
+               color='primary'
                size='small'
-               onClick={handleDeleteUserData}
+               onClick={handleOpenCaloriedModal}
                sx={{ alignSelf: 'center' }}
             >
-               <Typography fontWeight='500'>Delete Data</Typography>
+               <Typography fontWeight='500'>ReCalculate Data</Typography>
             </Button>
          )}
 
          {/* SETUP BUTTON */}
-         {userData.length === 0 ? (
+         {userBMI?.length === 0 ? (
             <Button
                onClick={handleOpenCaloriedModal}
                variant='contained'

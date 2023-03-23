@@ -174,7 +174,7 @@ function IngredientSection() {
          </Box>
 
          {/* FORM */}
-         {!error && !isLoading && ingredientData?.name && (
+         {!error && !isLoading && ingredientData?.id && (
             <form
                onSubmit={handleSubmit}
                style={{ display: 'flex' }}

@@ -16,6 +16,7 @@ import { deleteIngredient, addRecipe, deleteAllMeal } from '../store'
 import { useState } from 'react'
 import SnackBar from '../components/SnackBar'
 import CancelIcon from '@mui/icons-material/Cancel'
+import { nanoid } from '@reduxjs/toolkit'
 
 function FoodSection() {
    const dispatch = useDispatch()
@@ -41,12 +42,14 @@ function FoodSection() {
       dispatch(
          addRecipe({
             name: recipeName,
-            id: meal[0].id,
+            id: nanoid(),
             calories: total.calories,
             protein: total.protein,
             carb: total.carb,
             fat: total.fat,
-            ingredients: meal.map((ing,index) => `${index+1}: ${ing.name} ${ing.serving}gr`),
+            ingredients: meal.map(
+               (ing, index) => `${index + 1}: ${ing.name} ${ing.serving}gr`
+            ),
          })
       )
       setOpenSnackbar(true)
